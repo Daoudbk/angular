@@ -1,0 +1,26 @@
+<div ng-controller="ProfileController">
+	<h1>Профиль пользователя <b>{{loggedUser.login}}</b></h1>
+	<div class="edit">
+		<form role="form" ng-model="profile" submit-on="CtrlS" ng-submit="submit()" ng-show="profile">
+			<div class="form-group">
+				<label for="password">Пароль</label>
+				<input ng-model="profile.password" type="password" id="password" class="form-control" placeholder="Введите новый пароль">
+			</div>
+			<div class="form-group">
+				<label for="email">E-mail</label>
+				<input ng-model="profile.email" type="email" id="email" class="form-control" placeholder="Введите адрес электронной почты" data-toggle="popover">
+			</div>
+			<div class="form-group">
+				<label for="first_name">Имя</label>
+				<input ng-model="profile.first_name" type="text" id="first_name" class="form-control" placeholder="Введите имя" data-toggle="popover">
+			</div>
+			<div class="form-group">
+				<label for="last_name">Фамилия</label>
+				<input ng-model="profile.last_name" type="text" id="last_name" class="form-control" placeholder="Введите фамилию" data-toggle="popover">
+			</div>
+			<div class="form-group">
+				<button class="btn btn-lg btn-primary" type="submit">Сохранить</button>
+			</div>
+		</form>
+	</div>
+</div>

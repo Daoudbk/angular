@@ -1,0 +1,63 @@
+<div id="wrapper">
+
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+	<ul class="sidebar-nav">
+		<li class="sidebar-brand">
+			<a href="#/">{{'Корень сайта'}}</a>
+		</li>
+		<li>
+			<a href="#">Dashboard</a>
+		</li>
+		<li>
+			<a href="#">Shortcuts</a>
+		</li>
+		<li>
+			<a href="#">Overview</a>
+		</li>
+		<li>
+			<a href="#">Events</a>
+		</li>
+		<li>
+			<a href="#">About</a>
+		</li>
+		<li>
+			<a href="#">Services</a>
+		</li>
+		<li>
+			<a href="#">Contact</a>
+		</li>
+	</ul>
+</div>
+<!-- /#sidebar-wrapper -->
+
+<!-- Page Content -->
+<div id="page-content-wrapper">
+
+	<div class="btn-group" role="group" aria-label="..." ng-controller="NavbarController">
+		<button ng-click="toggle()" type="button" id="toggle-button" class="btn btn-primary">Свернуть</button>
+		<button ng-click="home()" type="button" class="btn btn-primary{{currentState.name === 'base.browse' ? ' active' : ''}}">Корень сайта</button>
+		<button ng-click="refresh()" type="button" class="btn btn-primary">Обновить</button>
+		<button ng-click="search()" type="button" class="btn btn-primary">Поиск</button>
+		<button ng-click="trash()" type="button" class="btn btn-primary">Корзина</button>
+		<button ng-click="users()" type="button" class="btn btn-primary{{currentState.name === 'base.users' ? ' active' : ''}}">Пользователи</button>
+		<button ng-click="profile()" type="button" class="btn btn-primary{{currentState.name === 'base.profile' ? ' active' : ''}}">{{loggedUser.login}}</button>
+		<button ng-click="logout()" type="button" class="btn btn-primary">Выход</button>
+	</div>
+	<div ui-view></div>
+</div>
+<!-- /#page-content-wrapper -->
+
+<div id="modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">Ошибки заполнения формы:</h4>
+			</div>
+			<div class="modal-body"></div>
+		</div>
+	</div>
+</div>
+
+</div>

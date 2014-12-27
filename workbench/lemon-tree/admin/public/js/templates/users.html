@@ -1,0 +1,61 @@
+<div ng-controller="UsersController">
+	<h1>Управление пользователями</h1>
+	<div ng-show="groupList.length">
+		<h2>Группы</h2>
+		<div class="table-responsive">
+			<table class="table table-condensed table-striped table-hover">
+				<thead>
+					<th>ID</th>
+					<th>Название</th>
+					<th>Доступ по умолчанию</th>
+					<th>Доступ к элементам</th>
+					<th>Создана</th>
+					<th>Обновлена</th>
+				</thead>
+				<tbody>
+				<tr ng-repeat="group in groupList">
+					<td><a ui-sref="base.groupUsers({id: group.id})">{{group.id}}</a></td>
+					<td><a ui-sref="base.group({id: group.id})">{{group.name}}</a></td>
+					<td><a ui-sref="base.groupItems({id: group.id})">Редактировать</a></td>
+					<td><a ui-sref="base.groupElements({id: group.id})">Редактировать</a></td>
+					<td>{{timestamp(group.created_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(group.created_at) | date: 'HH:mm:ss'}}</small></td>
+					<td>{{timestamp(group.updated_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(group.updated_at) | date: 'HH:mm:ss'}}</small></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div ng-show="userList.length">
+		<h2>Пользователи</h2>
+		<div class="table-responsive">
+			<table class="table table-condensed table-striped table-hover">
+				<thead>
+					<th>ID</th>
+					<th>Логин</th>
+					<th>E-mail</th>
+					<th>Имя</th>
+					<th>Фамилия</th>
+					<th>Группы</th>
+					<th>Создан</th>
+					<th>Последний вход</th>
+				</thead>
+				<tbody>
+				<tr ng-repeat="user in userList">
+					<td><a ui-sref="base.userLog({id: user.id})">{{user.id}}</a></td>
+					<td><a ui-sref="base.user({id: user.id})">{{user.login}}</a></td>
+					<td>{{user.email}}</td>
+					<td>{{user.first_name}}</td>
+					<td>{{user.last_name}}</td>
+					<td>
+						<div ng-repeat="group in user.groups"><a ui-sref="base.group({id: group.id})">{{group.name}}</a></div>
+						<div ng-show="user.isSuperUser"><strong>Суперпользователь</strong></div>
+					</td>
+					<td>{{timestamp(user.created_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(user.created_at) | date: 'HH:mm:ss'}}</small></td>
+					<td><span ng-show="user.last_login">{{timestamp(user.last_login) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(user.last_login) | date: 'HH:mm:ss'}}</small></span></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<p><a ui-sref="base.log">Журнал действий пользователей</a></p>
+	</div>
+</div>
