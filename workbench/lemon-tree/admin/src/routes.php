@@ -110,10 +110,9 @@ Route::group(array(
 	Route::post('user/{id}', 'LemonTree\UserController@postSave')->
 		where('id', '[0-9]+');
 
-	Route::get('user/{id}/log', 'LemonTree\LogController@getUserLog')->
-		where('id', '[0-9]+');
-
 	Route::get('log', 'LemonTree\LogController@getLog');
+
+	Route::get('log/form', 'LemonTree\LogController@getForm');
 
 	Route::get('user/list', 'LemonTree\UserController@getList');
 

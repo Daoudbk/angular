@@ -528,6 +528,13 @@ class GroupController extends \BaseController {
 	{
 		$scope = array();
 
+		$loggedUser = LoggedUser::getUser();
+
+		if ( ! $loggedUser->hasAccess('admin')) {
+			$scope['state'] = 'error_admin_access_denied';
+			return \Response::json($scope);
+		}
+
 		$groupList = Group::orderBy('name', 'asc')->get();
 
 		$scope['groupList'] = $groupList;

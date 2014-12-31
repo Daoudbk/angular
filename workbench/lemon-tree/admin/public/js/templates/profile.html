@@ -1,10 +1,12 @@
 <div ng-controller="ProfileController">
-	<h1>Профиль пользователя <b>{{loggedUser.login}}</b></h1>
-	<div class="edit">
+	<ul class="breadcrumb">
+		<li class="active" ng-show="loggedUser">Профиль пользователя {{loggedUser.login}}</li>
+	</ul>
+	<div class="well" ng-show="loggedUser">
 		<form role="form" ng-model="profile" submit-on="CtrlS" ng-submit="submit()" ng-show="profile">
 			<div class="form-group">
 				<label for="password">Пароль</label>
-				<input ng-model="profile.password" type="password" id="password" class="form-control" placeholder="Введите новый пароль">
+				<input ng-model="profile.password" type="password" id="password" class="form-control" placeholder="Введите новый пароль" data-toggle="popover">
 			</div>
 			<div class="form-group">
 				<label for="email">E-mail</label>

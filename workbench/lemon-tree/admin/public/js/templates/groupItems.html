@@ -1,6 +1,10 @@
 <div ng-controller="ItemPermissionsController">
-	<div ng-show="itemList">
-		<h1>Доступ к элементам по умолчанию группы <b>{{group.name}}</b></h1>
+	<ul class="breadcrumb">
+		<li><a ui-sref="base.users">Управление пользователями</a></li>
+		<li class="active" ng-show="group">{{group.name}}</li>
+	</ul>
+	<div ng-show="group">
+		<h2 class="page-header">Доступ к элементам по умолчанию группы <b>{{group.name}}</b></h2>
 		<form role="form" submit-on="CtrlS" ng-submit="submit()">
 			<div class="form-group">
 				<div class="table-responsive">

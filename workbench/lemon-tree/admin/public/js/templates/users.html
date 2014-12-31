@@ -1,11 +1,13 @@
 <div ng-controller="UsersController">
-	<h1>Управление пользователями</h1>
+	<ul class="breadcrumb">
+		<li class="active">Управление пользователями</li>
+	</ul>
 	<div ng-show="groupList.length">
 		<h2>Группы</h2>
 		<div class="table-responsive">
 			<table class="table table-condensed table-striped table-hover">
 				<thead>
-					<th>ID</th>
+					<th></th>
 					<th>Название</th>
 					<th>Доступ по умолчанию</th>
 					<th>Доступ к элементам</th>
@@ -14,7 +16,7 @@
 				</thead>
 				<tbody>
 				<tr ng-repeat="group in groupList">
-					<td><a ui-sref="base.groupUsers({id: group.id})">{{group.id}}</a></td>
+					<td><a ui-sref="base.groupUsers({id: group.id})"><span class="halflings halflings-menu-right"></span></a></td>
 					<td><a ui-sref="base.group({id: group.id})">{{group.name}}</a></td>
 					<td><a ui-sref="base.groupItems({id: group.id})">Редактировать</a></td>
 					<td><a ui-sref="base.groupElements({id: group.id})">Редактировать</a></td>
@@ -30,7 +32,7 @@
 		<div class="table-responsive">
 			<table class="table table-condensed table-striped table-hover">
 				<thead>
-					<th>ID</th>
+					<th></th>
 					<th>Логин</th>
 					<th>E-mail</th>
 					<th>Имя</th>
@@ -41,7 +43,7 @@
 				</thead>
 				<tbody>
 				<tr ng-repeat="user in userList">
-					<td><a ui-sref="base.userLog({id: user.id})">{{user.id}}</a></td>
+					<td><a ui-sref="base.log({id: user.id})"><span class="halflings halflings-menu-right"></span></a></td>
 					<td><a ui-sref="base.user({id: user.id})">{{user.login}}</a></td>
 					<td>{{user.email}}</td>
 					<td>{{user.first_name}}</td>

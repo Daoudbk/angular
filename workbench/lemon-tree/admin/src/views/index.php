@@ -7,6 +7,7 @@
 <title>Lemon Tree</title>
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/bootstrap.min.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons.css')?>">
+<link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons-halflings.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons-bootstrap.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/default.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/login.css')?>">
@@ -14,7 +15,10 @@
 <script src="<?=asset('packages/lemon-tree/admin/js/jquery.blockUI.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/bootstrap.min.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/angular.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/i18n/angular-locale_ru-ru.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/angular-animate.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-ui-router.min.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/ui-bootstrap.min.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/app.js')?>"></script>
 </head>
 <body ng-app="adminApp" ui-view>

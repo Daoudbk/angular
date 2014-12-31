@@ -185,6 +185,13 @@ class UserController extends \BaseController {
 	{
 		$scope = array();
 
+		$loggedUser = LoggedUser::getUser();
+
+		if ( ! $loggedUser->hasAccess('admin')) {
+			$scope['state'] = 'error_admin_access_denied';
+			return \Response::json($scope);
+		}
+
 		$userList = User::orderBy('login', 'asc')->get();
 
 		foreach ($userList as $user) {
@@ -227,6 +234,7 @@ class UserController extends \BaseController {
 			$user->isSuperUser = $user->isSuperUser();
 		}
 
+		$scope['group'] = $activeGroup;
 		$scope['userList'] = $userList;
 
 		return \Response::json($scope);

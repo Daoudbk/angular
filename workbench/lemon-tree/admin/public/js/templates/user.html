@@ -1,10 +1,10 @@
 <div ng-controller="UserController">
-	<div ng-show="message" class="alert alert-block alert-danger">
-		{{message}}
-	</div>
+	<ul class="breadcrumb">
+		<li><a ui-sref="base.users">Управление пользователями</a></li>
+		<li class="active" ng-show="user">{{user.login}}</li>
+	</ul>
 	<div ng-show="user">
-		<h1>Редактирование пользователя <b>{{user.login}}</b></h1>
-		<div class="edit">
+		<div class="well">
 			<form role="form" ng-model="user" submit-on="CtrlS" ng-submit="submit()">
 				<div class="form-group">
 					<label for="login">Логин</label>
