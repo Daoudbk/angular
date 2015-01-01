@@ -1,5 +1,6 @@
 var app = angular.module('adminApp', [
 	'ui.router', 'ui.bootstrap', 'ngAnimate',
+	'ModalCtrl',
 	'LoginCtrl',
 	'NavbarCtrl', 'BrowseCtrl', 'UsersCtrl',
 ]);
@@ -377,6 +378,24 @@ login.factory('Login', function(
 	};
 });
 
+var modal = angular.module('ModalCtrl', []);
+
+modal.controller('ModalInstanceController', function(
+	$scope, $modalInstance, data
+) {
+	$scope.message = data.message;
+	$scope.textOk = data.textOk;
+	$scope.textCancel = data.textCancel;
+
+	$scope.ok = function () {
+		$modalInstance.close();
+	};
+
+	$scope.cancel = function () {
+		$modalInstance.dismiss();
+	};
+});
+
 login.controller('LoginController', function(
 	$rootScope, $scope, $state,
 	Login, AuthToken
@@ -484,7 +503,7 @@ users.controller('ProfileController', function(
 });
 
 users.controller('UsersController', function(
-	$rootScope, $scope, $http
+	$rootScope, $scope, $http, $modal
 ) {
 	var groupList = function() {
 		$http({
@@ -522,36 +541,74 @@ users.controller('UsersController', function(
 	groupList();
 	userList();
 
-	$scope.deleteGroup = function(id) {
-		$.blockUI();
-		$http({
-			method: 'DELETE',
-			url: 'api/group/'+id,
-		}).then(
-			function(response) {
-				groupList();
-				userList();
-				$.unblockUI();
-			},
-			function(error) {
-				console.log(error);
+	$scope.deleteGroup = function(group) {
+		var modalInstance = $modal.open({
+			templateUrl: 'modal.html',
+			controller: 'ModalInstanceController',
+			size: 'sm',
+			resolve: {
+				data: function() {
+					return {
+						message: 'Удалить группу «'+group.name+'»?',
+						textOk: 'Удалить',
+					};
+				}
 			}
+		});
+
+		modalInstance.result.then(
+			function() {
+				$.blockUI();
+				$http({
+					method: 'DELETE',
+					url: 'api/group/'+group.id,
+				}).then(
+					function(response) {
+						groupList();
+						userList();
+						$.unblockUI();
+					},
+					function(error) {
+						console.log(error);
+					}
+				);
+			},
+			function() {}
 		);
 	};
 
-	$scope.deleteUser = function(id) {
-		$.blockUI();
-		$http({
-			method: 'DELETE',
-			url: 'api/user/'+id,
-		}).then(
-			function(response) {
-				userList();
-				$.unblockUI();
-			},
-			function(error) {
-				console.log(error);
+	$scope.deleteUser = function(user) {
+		var modalInstance = $modal.open({
+			templateUrl: 'modal.html',
+			controller: 'ModalInstanceController',
+			size: 'sm',
+			resolve: {
+				data: function() {
+					return {
+						message: 'Удалить пользователя «'+user.login+'»?',
+						textOk: 'Удалить',
+					};
+				}
 			}
+		});
+
+		modalInstance.result.then(
+			function() {
+				$.blockUI();
+				$http({
+					method: 'DELETE',
+					url: 'api/user/'+user.id,
+				}).then(
+					function(response) {
+						userList();
+						$.unblockUI();
+					},
+					function(error) {
+						console.log(error);
+					}
+				);
+			},
+			function() {}
 		);
 	};
 });
@@ -604,27 +661,66 @@ users.controller('GroupController', function(
 });
 
 users.controller('GroupUsersController', function(
-	$rootScope, $scope, $http, $stateParams
+	$rootScope, $scope, $http, $stateParams, $modal
 ) {
 	var id = $stateParams.id;
+
+	var userList = function() {
+		$http({
+			method: 'GET',
+			url: 'api/group/'+id+'/user/list',
+		}).then(
+			function(response) {
+				$scope.group = response.data.group;
+				$scope.userList = response.data.userList;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
 
 	$rootScope.activeIcon = 'users';
 
 	$scope.group = null;
 	$scope.userList = [];
 
-	$http({
-		method: 'GET',
-		url: 'api/group/'+id+'/user/list',
-	}).then(
-		function(response) {
-			$scope.group = response.data.group;
-			$scope.userList = response.data.userList;
-		},
-		function(error) {
-			console.log(error);
-		}
-	);
+	userList();
+
+	$scope.deleteUser = function(user) {
+		var modalInstance = $modal.open({
+			templateUrl: 'modal.html',
+			controller: 'ModalInstanceController',
+			size: 'sm',
+			resolve: {
+				data: function() {
+					return {
+						message: 'Удалить пользователя «'+user.login+'»?',
+						textOk: 'Удалить',
+					};
+				}
+			}
+		});
+
+		modalInstance.result.then(
+			function() {
+				$.blockUI();
+				$http({
+					method: 'DELETE',
+					url: 'api/user/'+user.id,
+				}).then(
+					function(response) {
+						userList();
+						$.unblockUI();
+					},
+					function(error) {
+						console.log(error);
+					}
+				);
+			},
+			function() {}
+		);
+	};
 });
 
 users.controller('ItemPermissionsController', function(

@@ -219,8 +219,8 @@ td .halflings {
 	color: inherit;
 }
 
-.text-danger .halflings {
-	color: inherit;
+.danger .halflings {
+	color: orange;
 }
 
 ul.nav > li.dropdown > a {
@@ -306,6 +306,11 @@ table.element-list td {
 	text-align: left;
 	border-bottom: 1px solid #EEE;
 	vertical-align: top;
+}
+
+table.element-list th.text-center,
+table.element-list td.text-center {
+	text-align: center;
 }
 
 table.element-list th.first, td.first {

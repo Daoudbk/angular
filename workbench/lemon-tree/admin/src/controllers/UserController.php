@@ -164,7 +164,7 @@ class UserController extends \BaseController {
 			'last_name' => 'Фамилия',
 		);
 
-		$groups = \Input::get('groups');
+		$groups = \Input::get('groups') ?: [];
 
 		if (is_array($groups)) {
 			foreach ($groups as $id => $value) {
