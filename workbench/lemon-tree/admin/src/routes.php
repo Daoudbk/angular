@@ -84,10 +84,15 @@ Route::group(array(
 
 	Route::post('profile/save', 'LemonTree\ProfileController@postSave');
 
+	Route::post('group/add', 'LemonTree\GroupController@save');
+
 	Route::get('group/{id}', 'LemonTree\GroupController@getGroup')->
 		where('id', '[0-9]+');
 
-	Route::post('group/{id}', 'LemonTree\GroupController@postSave')->
+	Route::post('group/{id}', 'LemonTree\GroupController@save')->
+		where('id', '[0-9]+');
+
+	Route::delete('group/{id}', 'LemonTree\GroupController@delete')->
 		where('id', '[0-9]+');
 
 	Route::get('group/{id}/items', 'LemonTree\GroupController@getItemPermissions')->
@@ -104,10 +109,17 @@ Route::group(array(
 
 	Route::get('group/list', 'LemonTree\GroupController@getList');
 
+	Route::get('user/form', 'LemonTree\UserController@getForm');
+
+	Route::post('user/add', 'LemonTree\UserController@save');
+
 	Route::get('user/{id}', 'LemonTree\UserController@getUser')->
 		where('id', '[0-9]+');
 
-	Route::post('user/{id}', 'LemonTree\UserController@postSave')->
+	Route::post('user/{id}', 'LemonTree\UserController@save')->
+		where('id', '[0-9]+');
+
+	Route::delete('user/{id}', 'LemonTree\UserController@delete')->
 		where('id', '[0-9]+');
 
 	Route::get('log', 'LemonTree\LogController@getLog');

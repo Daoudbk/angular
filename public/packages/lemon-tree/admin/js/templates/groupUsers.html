@@ -1,11 +1,14 @@
 <div ng-controller="GroupUsersController">
-	<h1>Управление пользователями</h1>
+	<ul class="breadcrumb">
+		<li><a ui-sref="base.users">Управление пользователями</a></li>
+		<li class="active" ng-show="group">{{group.name}}</li>
+	</ul>
 	<div ng-show="userList.length">
-		<h2>Пользователи группы {{group.name}}</h2>
+		<h2>Пользователи группы <b>{{group.name}}</b></h2>
 		<div class="table-responsive">
 			<table class="table table-condensed table-striped table-hover">
 				<thead>
-					<th>ID</th>
+					<th></th>
 					<th>Логин</th>
 					<th>E-mail</th>
 					<th>Имя</th>
@@ -16,7 +19,7 @@
 				</thead>
 				<tbody>
 				<tr ng-repeat="user in userList">
-					<td><a ui-sref="base.userLog({id: user.id})">{{user.id}}</a></td>
+					<td><a ui-sref="base.log({id: user.id})"><span class="halflings halflings-menu-right"></span></a></td>
 					<td><a ui-sref="base.user({id: user.id})">{{user.login}}</a></td>
 					<td>{{user.email}}</td>
 					<td>{{user.first_name}}</td>

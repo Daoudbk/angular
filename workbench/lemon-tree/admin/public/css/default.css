@@ -123,13 +123,14 @@ h3 > b {
 	color: #666;
 }
 
-.edit {
-	padding: 15px 20px 10px 20px;
-	background: #eee;
-	border: 1px solid #ccc;
-	border-radius: 5px;
+.dashed {
+	border-bottom: 1px dashed;
 }
 
+.hand {
+	cursor: pointer;
+	cursor: hand;
+}
 table .light {
 	background: #EEE;
 }
@@ -215,6 +216,10 @@ td .halflings {
 }
 
 .btn .halflings {
+	color: inherit;
+}
+
+.text-danger .halflings {
 	color: inherit;
 }
 

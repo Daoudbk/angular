@@ -32,16 +32,9 @@ class GroupController extends \BaseController {
 		return \Response::json($scope);
 	}
 
-	public function postSave($id)
+	public function delete($id)
 	{
 		$scope = array();
-
-		try {
-			$group = \Sentry::findGroupById($id);
-		} catch (\Exception $e) {
-			$scope['state'] = 'error_group_not_found';
-			return \Response::json($scope);
-		}
 
 		$loggedUser = LoggedUser::getUser();
 
@@ -50,9 +43,62 @@ class GroupController extends \BaseController {
 			return \Response::json($scope);
 		}
 
+		try {
+			$group = \Sentry::findGroupById($id);
+		} catch (\Exception $e) {
+			$scope['state'] = 'error_group_not_found';
+			return \Response::json($scope);
+		}
+
 		if ($loggedUser->inGroup($group)) {
 			$scope['state'] = 'error_group_access_denied';
 			return \Response::json($scope);
+		}
+
+		try {
+			$group->delete();
+		} catch (\Exception $e) {
+			$scope['state'] = 'error_group_delete_failed';
+			return \Response::json($scope);
+		}
+
+		UserAction::log(
+			UserActionType::ACTION_TYPE_DROP_GROUP_ID,
+			'ID '.$group->id.' ('.$group->name.')'
+		);
+
+		$scope['status'] = 'ok';
+
+		return \Response::json($scope);
+	}
+
+	public function save($id = null)
+	{
+		$scope = array();
+
+		$loggedUser = LoggedUser::getUser();
+
+		if ( ! $loggedUser->hasAccess('admin')) {
+			$scope['state'] = 'error_admin_access_denied';
+			return \Response::json($scope);
+		}
+
+		$group = null;
+
+		if ($id) {
+			try {
+				$group = \Sentry::findGroupById($id);
+			} catch (\Exception $e) {
+				$scope['state'] = 'error_group_not_found';
+				return \Response::json($scope);
+			}
+
+			if ($loggedUser->inGroup($group)) {
+				$scope['state'] = 'error_group_access_denied';
+				return \Response::json($scope);
+			}
+		} else {
+			$group = new Group;
 		}
 
 		$input = \Input::all();
@@ -97,7 +143,12 @@ class GroupController extends \BaseController {
 		$permissions['admin'] = (boolean)\Input::get('admin');
 		$group->permissions = $permissions;
 
-		$group->save();
+		try {
+			$group->save();
+		} catch (\Exception $e) {
+			$scope['state'] = 'error_group_save_failed';
+			return \Response::json($scope);
+		}
 
 		$group->admin = $group->hasAccess('admin');
 

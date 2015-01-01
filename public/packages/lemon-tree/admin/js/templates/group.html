@@ -1,10 +1,11 @@
 <div ng-controller="GroupController">
-	<div ng-show="message" class="alert alert-block alert-danger">
-		{{message}}
-	</div>
-	<div ng-show="group">
-		<h1>Редактирование группы <b>{{group.name}}</b></h1>
-		<div class="edit">
+	<ul class="breadcrumb">
+		<li><a ui-sref="base.users">Управление пользователями</a></li>
+		<li class="active" ng-show="id && group">{{group.name}}</li>
+		<li class="active" ng-hide="id">Новая группа</li>
+	</ul>
+	<div>
+		<div class="well">
 			<form role="form" ng-model="group" submit-on="CtrlS" ng-submit="submit()">
 				<div class="form-group">
 					<label for="name">Название</label>
@@ -38,10 +39,10 @@
 						</label>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-show="id">
 					<label>Дата создания:</label> {{group.created_at}}
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-show="id">
 					<label>Последнее изменение:</label> {{group.updated_at}}
 				</div>
 				<div class="form-group">

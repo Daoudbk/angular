@@ -1,5 +1,5 @@
 var app = angular.module('adminApp', [
-	'ui.router',
+	'ui.router', 'ui.bootstrap', 'ngAnimate',
 	'LoginCtrl',
 	'NavbarCtrl', 'BrowseCtrl', 'UsersCtrl',
 ]);
@@ -34,16 +34,27 @@ app.run(function(
 
 	$document
 		.on('keypress', function(event){
-			return Alert.onCtrlS(event);
+			return Alert.handleKeys(event);
 		})
 		.on('keydown', function(event){
-			return Alert.onCtrlS(event);
+			return Alert.handleKeys(event);
 		});
 
 	$rootScope.timestamp = function(datetime) {
 		return datetime
 			? new Date(Date.parse(datetime))
 			: null;
+	};
+
+	$rootScope.toDateString = function(date) {
+		if ( ! date) return null;
+
+		var dateString =
+			date.getFullYear()
+			+'-'+('0' + (date.getMonth() + 1)).slice(-2)
+			+'-'+('0' + date.getDate()).slice(-2);
+
+		return dateString;
 	};
 });
 
@@ -94,12 +105,17 @@ app.config(function(
 		controller: 'UsersController'
 	})
 	.state('base.log', {
-		url: '/log',
+		url: '/log?id',
 		templateUrl: templatePath('log.html'),
 		controller: 'LogController'
 	})
 	.state('base.group', {
 		url: '/group/{id:[0-9]+}',
+		templateUrl: templatePath('group.html'),
+		controller: 'GroupController'
+	})
+	.state('base.groupAdd', {
+		url: '/group/add',
 		templateUrl: templatePath('group.html'),
 		controller: 'GroupController'
 	})
@@ -123,10 +139,10 @@ app.config(function(
 		templateUrl: templatePath('user.html'),
 		controller: 'UserController'
 	})
-	.state('base.userLog', {
-		url: '/user/{id:[0-9]+}/log',
-		templateUrl: templatePath('log.html'),
-		controller: 'UserLogController'
+	.state('base.userAdd', {
+		url: '/user/add',
+		templateUrl: templatePath('user.html'),
+		controller: 'UserController'
 	})
 	.state('base.profile', {
 		url: '/profile',
@@ -149,6 +165,22 @@ app.directive('submitOn', function() {
 			setTimeout(function() {
 				element.trigger('submit');
 			});
+		});
+    };
+});
+
+app.directive('ctrlLeft', function() {
+    return function(scope, element, attrs) {
+		scope.$on(attrs.ctrlLeft, function() {
+			scope.prev();
+		});
+    };
+});
+
+app.directive('ctrlRight', function() {
+    return function(scope, element, attrs) {
+		scope.$on(attrs.ctrlRight, function() {
+			scope.next();
 		});
     };
 });
@@ -245,11 +277,21 @@ app.factory('FormInterceptor', function ($q, $rootScope, $injector, Alert) {
 
 app.factory('Alert', function($rootScope) {
 	return {
-		onCtrlS: function(event) {
+		handleKeys: function(event) {
 			var code = event.keyCode || event.which;
 
 			if (code == 83 && event.ctrlKey == true) {
 				$rootScope.$broadcast('CtrlS');
+				return false;
+			}
+
+			if (code == 37 && event.ctrlKey == true) {
+				$rootScope.$broadcast('CtrlLeft');
+				return false;
+			}
+
+			if (code == 39 && event.ctrlKey == true) {
+				$rootScope.$broadcast('CtrlRight');
 				return false;
 			}
 
@@ -278,8 +320,6 @@ app.factory('Alert', function($rootScope) {
 			$.blockUI();
 		},
 		onResponse: function(response) {
-			$.unblockUI();
-
 			if (errors = response.data.error) {
 				var html = '';
 
@@ -304,6 +344,7 @@ app.factory('Alert', function($rootScope) {
 					$('#modal').modal();
 				}
 			}
+			$.unblockUI();
 		},
 	};
 });
@@ -402,8 +443,10 @@ navbar.controller('NavbarController', function(
 var browse = angular.module('BrowseCtrl', []);
 
 browse.controller('BrowseController', function(
-	$scope, $http
+	$rootScope, $scope, $http
 ) {
+	$rootScope.activeIcon = 'browse';
+
 	$scope.categoryList = null;
 
 	$http({
@@ -422,8 +465,10 @@ browse.controller('BrowseController', function(
 var users = angular.module('UsersCtrl', []);
 
 users.controller('ProfileController', function(
-	$scope, $http
+	$rootScope, $scope, $http
 ) {
+	$rootScope.activeIcon = 'profile';
+
 	$scope.$on('loggedUser', function (event, loggedUser) {
 		$scope.profile = loggedUser;
 	});
@@ -439,67 +484,116 @@ users.controller('ProfileController', function(
 });
 
 users.controller('UsersController', function(
-	$scope, $http
+	$rootScope, $scope, $http
 ) {
+	var groupList = function() {
+		$http({
+			method: 'GET',
+			url: 'api/group/list'
+		}).then(
+			function(response) {
+				$scope.groupList = response.data.groupList;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
+	var userList = function() {
+		$http({
+			method: 'GET',
+			url: 'api/user/list'
+		}).then(
+			function(response) {
+				$scope.userList = response.data.userList;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
+	$rootScope.activeIcon = 'users';
+
 	$scope.groupList = [];
 	$scope.userList = [];
 
-	$http({
-		method: 'GET',
-		url: 'api/group/list'
-	}).then(
-		function(response) {
-			$scope.groupList = response.data.groupList;
-		},
-		function(error) {
-			console.log(error);
-		}
-	);
+	groupList();
+	userList();
 
-	$http({
-		method: 'GET',
-		url: 'api/user/list'
-	}).then(
-		function(response) {
-			$scope.userList = response.data.userList;
-		},
-		function(error) {
-			console.log(error);
-		}
-	);
+	$scope.deleteGroup = function(id) {
+		$.blockUI();
+		$http({
+			method: 'DELETE',
+			url: 'api/group/'+id,
+		}).then(
+			function(response) {
+				groupList();
+				userList();
+				$.unblockUI();
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
+	$scope.deleteUser = function(id) {
+		$.blockUI();
+		$http({
+			method: 'DELETE',
+			url: 'api/user/'+id,
+		}).then(
+			function(response) {
+				userList();
+				$.unblockUI();
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
 });
 
 users.controller('GroupController', function(
-	$scope, $http, $stateParams
+	$rootScope, $scope, $http, $state, $stateParams
 ) {
 	var id = $stateParams.id;
 
+	$rootScope.activeIcon = 'users';
+
+	$scope.id = id;
 	$scope.group = null;
 
-	$http({
-		method: 'GET',
-		url: 'api/group/'+id
-	}).then(
-		function(response) {
-			if (response.data.group) {
+	if (id) {
+		$http({
+			method: 'GET',
+			url: 'api/group/'+id
+		}).then(
+			function(response) {
 				$scope.group = response.data.group;
+			},
+			function(error) {
+				console.log(error);
 			}
-		},
-		function(error) {
-			console.log(error);
-		}
-	);
+		);
+	}
 
 	$scope.submit = function() {
 		$http({
 			method: 'POST',
-			url: 'api/group/'+id,
+			url: (id ? 'api/group/'+id : 'api/group/add'),
 			data: $scope.group,
 			checkForm: true,
 		}).then(
 			function(response) {
 				if (response.data.group) {
-					$scope.group = response.data.group;
+					if (id) {
+						$scope.group = response.data.group;
+					} else {
+						$state.go('base.users');
+					}
 				}
 			},
 			function(error) {
@@ -510,9 +604,11 @@ users.controller('GroupController', function(
 });
 
 users.controller('GroupUsersController', function(
-	$scope, $http, $stateParams
+	$rootScope, $scope, $http, $stateParams
 ) {
 	var id = $stateParams.id;
+
+	$rootScope.activeIcon = 'users';
 
 	$scope.group = null;
 	$scope.userList = [];
@@ -522,12 +618,8 @@ users.controller('GroupUsersController', function(
 		url: 'api/group/'+id+'/user/list',
 	}).then(
 		function(response) {
-			if (response.data.group) {
-				$scope.group = response.data.group;
-			}
-			if (response.data.userList) {
-				$scope.userList = response.data.userList;
-			}
+			$scope.group = response.data.group;
+			$scope.userList = response.data.userList;
 		},
 		function(error) {
 			console.log(error);
@@ -536,9 +628,11 @@ users.controller('GroupUsersController', function(
 });
 
 users.controller('ItemPermissionsController', function(
-	$scope, $http, $stateParams
+	$rootScope, $scope, $http, $stateParams
 ) {
 	var id = $stateParams.id;
+
+	$rootScope.activeIcon = 'users';
 
 	$scope.group = null;
 	$scope.itemList = [];
@@ -588,9 +682,11 @@ users.controller('ItemPermissionsController', function(
 });
 
 users.controller('ElementPermissionsController', function(
-	$scope, $http, $stateParams
+	$rootScope, $scope, $http, $stateParams
 ) {
 	var id = $stateParams.id;
+
+	$rootScope.activeIcon = 'users';
 
 	$scope.group = null;
 	$scope.itemList = [];
@@ -605,17 +701,9 @@ users.controller('ElementPermissionsController', function(
 			var defaultPermission = response.data.defaultPermission;
 			var permissionList = response.data.permissionList;
 
-			if (response.data.group) {
-				$scope.group = response.data.group;
-			}
-
-			if (response.data.itemList) {
-				$scope.itemList = response.data.itemList;
-			}
-
-			if (response.data.itemElementList) {
-				$scope.itemElementList = response.data.itemElementList;
-			}
+			$scope.group = response.data.group;
+			$scope.itemList = response.data.itemList;
+			$scope.itemElementList = response.data.itemElementList;
 
 			for (var itemName in $scope.itemElementList) {
 				for (var classId in $scope.itemElementList[itemName]) {
@@ -639,7 +727,7 @@ users.controller('ElementPermissionsController', function(
 			checkForm: true,
 		}).then(
 			function(response) {
-				
+
 			},
 			function(error) {
 				console.log(error);
@@ -649,40 +737,56 @@ users.controller('ElementPermissionsController', function(
 });
 
 users.controller('UserController', function(
-	$scope, $http, $stateParams
+	$rootScope, $scope, $http, $state, $stateParams
 ) {
 	var id = $stateParams.id;
 
+	$rootScope.activeIcon = 'users';
+
+	$scope.id = id;
 	$scope.user = null;
 	$scope.groupList = [];
 
 	$http({
 		method: 'GET',
-		url: 'api/user/'+id
+		url: 'api/user/form'
 	}).then(
 		function(response) {
-			if (response.data.user) {
-				$scope.user = response.data.user;
-			}
-			if (response.data.groupList) {
-				$scope.groupList = response.data.groupList;
-			}
+			$scope.groupList = response.data.groupList;
 		},
 		function(error) {
 			console.log(error);
 		}
 	);
 
+	if (id) {
+		$http({
+			method: 'GET',
+			url: 'api/user/'+id
+		}).then(
+			function(response) {
+				$scope.user = response.data.user;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	}
+
 	$scope.submit = function() {
 		$http({
 			method: 'POST',
-			url: 'api/user/'+id,
+			url: (id ? 'api/user/'+id : 'api/user/add'),
 			data: $scope.user,
 			checkForm: true,
 		}).then(
 			function(response) {
 				if (response.data.user) {
-					$scope.user = response.data.user;
+					if (id) {
+						$scope.user = response.data.user;
+					} else {
+						$state.go('base.users');
+					}
 				}
 			},
 			function(error) {
@@ -690,6 +794,156 @@ users.controller('UserController', function(
 			}
 		);
 	};
+});
+
+users.controller('LogController', function(
+	$rootScope, $scope, $http, $stateParams, $window
+) {
+	var id = $stateParams.id;
+	var currentPage = $window.localStorage.getItem('log_current_page') || 1;
+	var blocked = false;
+
+	var getForm = function() {
+		$http({
+			method: 'GET',
+			url: 'api/log/form',
+			params: {
+				user: id,
+			}
+		}).then(
+			function(response) {
+				$scope.activeUser = response.data.activeUser;
+				$scope.userList = response.data.userList;
+				$scope.actionTypeList = response.data.actionTypeList;
+
+				getList();
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
+	var getList = function(stop) {
+		blocked = true;
+
+		var userId = $scope.activeUser
+			? $scope.activeUser.id
+			: null;
+
+		var dateFromString = $scope.filter.dateFrom
+			? $rootScope.toDateString($scope.filter.dateFrom)
+			: null;
+
+		var dateToString = $scope.filter.dateTo
+			? $rootScope.toDateString($scope.filter.dateTo)
+			: null;
+
+		$http({
+			method: 'GET',
+			url: 'api/log',
+			params: {
+				user: userId,
+				actionType: $scope.filter.actionType,
+				comments: $scope.filter.comments,
+				dateFrom: dateFromString,
+				dateTo: dateToString,
+				page: currentPage,
+				perPage: $scope.perPage,
+			}
+		}).then(
+			function(response) {
+				$scope.userActionList = response.data.userActionList;
+				$scope.count = response.data.count;
+				$scope.currentPage = response.data.currentPage;
+
+				if (
+					currentPage !== response.data.currentPage
+					&& ! stop
+				) {
+					currentPage = response.data.currentPage;
+					getList(true);
+					return false;
+				}
+
+				$window.localStorage.setItem('log_current_page', currentPage);
+
+				$scope.empty = $scope.userActionList.length ? false : true;
+
+				blocked = false;
+
+				$.unblockUI();
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
+	$rootScope.activeIcon = 'users';
+
+	$scope.activeUser = null;
+	$scope.userList = [];
+	$scope.actionTypeList = [];
+	$scope.userActionList = [];
+	$scope.empty = false;
+
+	$scope.dateFromOpened = false;
+	$scope.dateToOpened = false;
+
+	$scope.filter = {
+		actionType: null,
+		comments: null,
+		dateFrom:  null,
+		dateTo:  null,
+	};
+
+	$scope.perPage = 10;
+
+	getForm();
+
+	$scope.submit = function() {
+		$.blockUI();
+		currentPage = 1;
+		getList();
+	};
+
+	$scope.pageChanged = function() {
+		$.blockUI();
+		currentPage = $scope.currentPage;
+		getList();
+	};
+
+	$scope.prev = function() {
+		if ( ! blocked && $scope.currentPage > 1) {
+			$scope.currentPage--;
+			$scope.pageChanged();
+		}
+	};
+
+	$scope.next = function() {
+		if ( ! blocked && $scope.currentPage < $scope.numPages) {
+			$scope.currentPage++;
+			$scope.pageChanged();
+		}
+	};
+
+	$scope.openDateFrom = function($event) {
+		$event.preventDefault();
+		$event.stopPropagation();
+
+		$scope.dateFromOpened = true;
+		$scope.dateToOpened = false;
+	 };
+
+	 $scope.openDateTo = function($event) {
+		$event.preventDefault();
+		$event.stopPropagation();
+
+		$scope.dateToOpened = true;
+		$scope.dateFromOpened = false;
+	 };
+
 });
 
 

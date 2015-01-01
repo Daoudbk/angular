@@ -114,6 +114,11 @@ app.config(function(
 		templateUrl: templatePath('group.html'),
 		controller: 'GroupController'
 	})
+	.state('base.groupAdd', {
+		url: '/group/add',
+		templateUrl: templatePath('group.html'),
+		controller: 'GroupController'
+	})
 	.state('base.groupUsers', {
 		url: '/group/{id:[0-9]+}/users',
 		templateUrl: templatePath('groupUsers.html'),
@@ -131,6 +136,11 @@ app.config(function(
 	})
 	.state('base.user', {
 		url: '/user/{id:[0-9]+}',
+		templateUrl: templatePath('user.html'),
+		controller: 'UserController'
+	})
+	.state('base.userAdd', {
+		url: '/user/add',
 		templateUrl: templatePath('user.html'),
 		controller: 'UserController'
 	})
@@ -476,69 +486,114 @@ users.controller('ProfileController', function(
 users.controller('UsersController', function(
 	$rootScope, $scope, $http
 ) {
+	var groupList = function() {
+		$http({
+			method: 'GET',
+			url: 'api/group/list'
+		}).then(
+			function(response) {
+				$scope.groupList = response.data.groupList;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
+	var userList = function() {
+		$http({
+			method: 'GET',
+			url: 'api/user/list'
+		}).then(
+			function(response) {
+				$scope.userList = response.data.userList;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
 	$rootScope.activeIcon = 'users';
 
 	$scope.groupList = [];
 	$scope.userList = [];
 
-	$http({
-		method: 'GET',
-		url: 'api/group/list'
-	}).then(
-		function(response) {
-			$scope.groupList = response.data.groupList;
-		},
-		function(error) {
-			console.log(error);
-		}
-	);
+	groupList();
+	userList();
 
-	$http({
-		method: 'GET',
-		url: 'api/user/list'
-	}).then(
-		function(response) {
-			$scope.userList = response.data.userList;
-		},
-		function(error) {
-			console.log(error);
-		}
-	);
+	$scope.deleteGroup = function(id) {
+		$.blockUI();
+		$http({
+			method: 'DELETE',
+			url: 'api/group/'+id,
+		}).then(
+			function(response) {
+				groupList();
+				userList();
+				$.unblockUI();
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
+	$scope.deleteUser = function(id) {
+		$.blockUI();
+		$http({
+			method: 'DELETE',
+			url: 'api/user/'+id,
+		}).then(
+			function(response) {
+				userList();
+				$.unblockUI();
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
 });
 
 users.controller('GroupController', function(
-	$rootScope, $scope, $http, $stateParams
+	$rootScope, $scope, $http, $state, $stateParams
 ) {
 	var id = $stateParams.id;
 
 	$rootScope.activeIcon = 'users';
 
+	$scope.id = id;
 	$scope.group = null;
 
-	$http({
-		method: 'GET',
-		url: 'api/group/'+id
-	}).then(
-		function(response) {
-			if (response.data.group) {
+	if (id) {
+		$http({
+			method: 'GET',
+			url: 'api/group/'+id
+		}).then(
+			function(response) {
 				$scope.group = response.data.group;
+			},
+			function(error) {
+				console.log(error);
 			}
-		},
-		function(error) {
-			console.log(error);
-		}
-	);
+		);
+	}
 
 	$scope.submit = function() {
 		$http({
 			method: 'POST',
-			url: 'api/group/'+id,
+			url: (id ? 'api/group/'+id : 'api/group/add'),
 			data: $scope.group,
 			checkForm: true,
 		}).then(
 			function(response) {
 				if (response.data.group) {
-					$scope.group = response.data.group;
+					if (id) {
+						$scope.group = response.data.group;
+					} else {
+						$state.go('base.users');
+					}
 				}
 			},
 			function(error) {
@@ -563,12 +618,8 @@ users.controller('GroupUsersController', function(
 		url: 'api/group/'+id+'/user/list',
 	}).then(
 		function(response) {
-			if (response.data.group) {
-				$scope.group = response.data.group;
-			}
-			if (response.data.userList) {
-				$scope.userList = response.data.userList;
-			}
+			$scope.group = response.data.group;
+			$scope.userList = response.data.userList;
 		},
 		function(error) {
 			console.log(error);
@@ -650,17 +701,9 @@ users.controller('ElementPermissionsController', function(
 			var defaultPermission = response.data.defaultPermission;
 			var permissionList = response.data.permissionList;
 
-			if (response.data.group) {
-				$scope.group = response.data.group;
-			}
-
-			if (response.data.itemList) {
-				$scope.itemList = response.data.itemList;
-			}
-
-			if (response.data.itemElementList) {
-				$scope.itemElementList = response.data.itemElementList;
-			}
+			$scope.group = response.data.group;
+			$scope.itemList = response.data.itemList;
+			$scope.itemElementList = response.data.itemElementList;
 
 			for (var itemName in $scope.itemElementList) {
 				for (var classId in $scope.itemElementList[itemName]) {
@@ -694,42 +737,56 @@ users.controller('ElementPermissionsController', function(
 });
 
 users.controller('UserController', function(
-	$rootScope, $scope, $http, $stateParams
+	$rootScope, $scope, $http, $state, $stateParams
 ) {
 	var id = $stateParams.id;
 
 	$rootScope.activeIcon = 'users';
 
+	$scope.id = id;
 	$scope.user = null;
 	$scope.groupList = [];
 
 	$http({
 		method: 'GET',
-		url: 'api/user/'+id
+		url: 'api/user/form'
 	}).then(
 		function(response) {
-			if (response.data.user) {
-				$scope.user = response.data.user;
-			}
-			if (response.data.groupList) {
-				$scope.groupList = response.data.groupList;
-			}
+			$scope.groupList = response.data.groupList;
 		},
 		function(error) {
 			console.log(error);
 		}
 	);
 
+	if (id) {
+		$http({
+			method: 'GET',
+			url: 'api/user/'+id
+		}).then(
+			function(response) {
+				$scope.user = response.data.user;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	}
+
 	$scope.submit = function() {
 		$http({
 			method: 'POST',
-			url: 'api/user/'+id,
+			url: (id ? 'api/user/'+id : 'api/user/add'),
 			data: $scope.user,
 			checkForm: true,
 		}).then(
 			function(response) {
 				if (response.data.user) {
-					$scope.user = response.data.user;
+					if (id) {
+						$scope.user = response.data.user;
+					} else {
+						$state.go('base.users');
+					}
 				}
 			},
 			function(error) {

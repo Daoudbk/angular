@@ -1,25 +1,30 @@
 <div ng-controller="UsersController">
-	<h1>Управление пользователями</h1>
+	<ul class="breadcrumb">
+		<li class="active">Управление пользователями</li>
+	</ul>
+	<p>Добавить: <a ui-sref="base.groupAdd">Группа</a>, <a ui-sref="base.userAdd">Пользователь</a></p>
 	<div ng-show="groupList.length">
 		<h2>Группы</h2>
 		<div class="table-responsive">
 			<table class="table table-condensed table-striped table-hover">
 				<thead>
-					<th>ID</th>
+					<th class="first"></th>
 					<th>Название</th>
 					<th>Доступ по умолчанию</th>
 					<th>Доступ к элементам</th>
 					<th>Создана</th>
 					<th>Обновлена</th>
+					<th class="last"><span class="halflings halflings-remove-circle"></span></th>
 				</thead>
 				<tbody>
 				<tr ng-repeat="group in groupList">
-					<td><a ui-sref="base.groupUsers({id: group.id})">{{group.id}}</a></td>
+					<td class="first"><a ui-sref="base.groupUsers({id: group.id})"><span class="halflings halflings-menu-right"></span></a></td>
 					<td><a ui-sref="base.group({id: group.id})">{{group.name}}</a></td>
 					<td><a ui-sref="base.groupItems({id: group.id})">Редактировать</a></td>
 					<td><a ui-sref="base.groupElements({id: group.id})">Редактировать</a></td>
 					<td>{{timestamp(group.created_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(group.created_at) | date: 'HH:mm:ss'}}</small></td>
 					<td>{{timestamp(group.updated_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(group.updated_at) | date: 'HH:mm:ss'}}</small></td>
+					<td class="last"><span class="hand text-danger" ng-click="deleteGroup(group.id)"><span class="halflings halflings-remove-circle"></span></span></td>
 				</tr>
 				</tbody>
 			</table>
@@ -30,7 +35,7 @@
 		<div class="table-responsive">
 			<table class="table table-condensed table-striped table-hover">
 				<thead>
-					<th>ID</th>
+					<th class="first"></th>
 					<th>Логин</th>
 					<th>E-mail</th>
 					<th>Имя</th>
@@ -38,10 +43,11 @@
 					<th>Группы</th>
 					<th>Создан</th>
 					<th>Последний вход</th>
+					<th class="last"><span class="halflings halflings-remove-circle"></span></th>
 				</thead>
 				<tbody>
 				<tr ng-repeat="user in userList">
-					<td><a ui-sref="base.userLog({id: user.id})">{{user.id}}</a></td>
+					<td class="first"><a ui-sref="base.log({id: user.id})"><span class="halflings halflings-menu-right"></span></a></td>
 					<td><a ui-sref="base.user({id: user.id})">{{user.login}}</a></td>
 					<td>{{user.email}}</td>
 					<td>{{user.first_name}}</td>
@@ -52,6 +58,7 @@
 					</td>
 					<td>{{timestamp(user.created_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(user.created_at) | date: 'HH:mm:ss'}}</small></td>
 					<td><span ng-show="user.last_login">{{timestamp(user.last_login) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(user.last_login) | date: 'HH:mm:ss'}}</small></span></td>
+					<td class="last"><span class="hand text-danger" ng-click="deleteUser(user.id)"><span class="halflings halflings-remove-circle"></span></span></td>
 				</tr>
 				</tbody>
 			</table>

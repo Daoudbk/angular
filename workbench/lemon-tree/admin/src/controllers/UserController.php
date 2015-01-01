@@ -2,6 +2,24 @@
 
 class UserController extends \BaseController {
 
+	public function getForm()
+	{
+		$scope = array();
+
+		$loggedUser = LoggedUser::getUser();
+
+		if ( ! $loggedUser->hasAccess('admin')) {
+			$scope['state'] = 'error_admin_access_denied';
+			return \Response::json($scope);
+		}
+
+		$groupList = Group::orderBy('name', 'asc')->get();
+
+		$scope['groupList'] = $groupList;
+
+		return \Response::json($scope);
+	}
+
 	public function getUser($id)
 	{
 		$scope = array();
@@ -28,8 +46,6 @@ class UserController extends \BaseController {
 			return \Response::json($scope);
 		}
 
-		$groupList = Group::orderBy('name', 'asc')->get();
-
 		$userGroups = $user->getGroups();
 
 		$userGroupMap = array();
@@ -42,12 +58,11 @@ class UserController extends \BaseController {
 		$user->isSuperUser = $user->isSuperUser();
 
 		$scope['user'] = $user;
-		$scope['groupList'] = $groupList;
 
 		return \Response::json($scope);
 	}
 
-	public function postSave($id)
+	public function delete($id)
 	{
 		$scope = array();
 
@@ -71,6 +86,57 @@ class UserController extends \BaseController {
 		) {
 			$scope['state'] = 'error_user_access_denied';
 			return \Response::json($scope);
+		}
+
+		try {
+			$user->delete();
+		} catch (\Exception $e) {
+			$scope['state'] = 'error_user_delete_failed';
+			return \Response::json($scope);
+		}
+
+		UserAction::log(
+			UserActionType::ACTION_TYPE_DROP_USER_ID,
+			'ID '.$user->id.' ('.$user->login.')'
+		);
+
+		$scope['status'] = 'ok';
+
+		return \Response::json($scope);
+	}
+
+	public function save($id = null)
+	{
+		$scope = array();
+
+		$loggedUser = LoggedUser::getUser();
+
+		if ( ! $loggedUser->hasAccess('admin')) {
+			$scope['state'] = 'error_admin_access_denied';
+			return \Response::json($scope);
+		}
+
+		$user = null;
+
+		if ($id) {
+			try {
+				$user = \Sentry::findUserById($id);
+			} catch (\Exception $e) {
+				$scope['state'] = 'error_user_not_found';
+				return \Response::json($scope);
+			}
+
+			if (
+				$loggedUser->id == $user->id
+				|| $user->isSuperUser()
+			) {
+				$scope['state'] = 'error_user_access_denied';
+				return \Response::json($scope);
+			}
+		} else {
+			$user = new User;
+
+			$user->activated = true;
 		}
 
 		$input = \Input::all();
@@ -136,7 +202,12 @@ class UserController extends \BaseController {
 		$user->first_name = \Input::get('first_name');
 		$user->last_name = \Input::get('last_name');
 
-		$user->save();
+		try {
+			$user->save();
+		} catch (\Exception $e) {
+			$scope['state'] = 'error_user_save_failed';
+			return \Response::json($scope);
+		}
 
 		$userGroups = $user->getGroups();
 

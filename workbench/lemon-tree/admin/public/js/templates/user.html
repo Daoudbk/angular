@@ -1,9 +1,10 @@
 <div ng-controller="UserController">
 	<ul class="breadcrumb">
 		<li><a ui-sref="base.users">Управление пользователями</a></li>
-		<li class="active" ng-show="user">{{user.login}}</li>
+		<li class="active" ng-show="id && user">{{user.login}}</li>
+		<li class="active" ng-hide="id">Новый пользователь</li>
 	</ul>
-	<div ng-show="user">
+	<div>
 		<div class="well">
 			<form role="form" ng-model="user" submit-on="CtrlS" ng-submit="submit()">
 				<div class="form-group">
@@ -34,13 +35,13 @@
 						</label>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-show="id">
 					<label>Дата регистрации:</label> {{user.created_at}}
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-show="id">
 					<label>Последнее изменение:</label> {{user.updated_at}}
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-show="id">
 					<label>Дата последнего входа:</label> {{user.last_login || 'Не определено'}}
 				</div>
 				<div class="form-group">
