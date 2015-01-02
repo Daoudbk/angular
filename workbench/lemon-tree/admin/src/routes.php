@@ -133,4 +133,8 @@ Route::group(array(
 
 	Route::get('browse', 'LemonTree\BrowseController@getIndex');
 
+	Route::get('tree', 'LemonTree\TreeController@show');
+
+	Route::get('tree/{classId}', 'LemonTree\TreeController@show');
+
 });

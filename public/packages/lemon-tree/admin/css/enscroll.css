@@ -1,0 +1,24 @@
+.track3 {
+	z-index: 10000;
+	width: 10px;
+	background: rgba(255, 255, 255, 1);
+	margin-right: 2px;
+}
+
+.track3:hover,
+.track3.dragging {
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.handle3 {
+	z-index: 10001;
+	width: 7px;
+	right: 0;
+	background: rgba(255, 255, 255, 0.5);
+	border-radius: 7px;
+}
+
+.track3:hover .handle3,
+.track3.dragging .handle3 {
+	background: rgba(255, 255, 255, 0.8);
+}

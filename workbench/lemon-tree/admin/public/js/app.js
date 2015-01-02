@@ -1,12 +1,13 @@
 var app = angular.module('adminApp', [
-	'ui.router', 'ui.bootstrap', 'ngAnimate',
+	'ui.router', 'ui.bootstrap', 'ngAnimate', 'perfect_scrollbar',
 	'ModalCtrl',
 	'LoginCtrl',
-	'NavbarCtrl', 'BrowseCtrl', 'UsersCtrl',
+	'NavbarCtrl', 'TreeCtrl',
+	'BrowseCtrl', 'UsersCtrl',
 ]);
 
 app.run(function(
-	$rootScope, $state, $document,
+	$rootScope, $state, $document, $window,
 	AuthToken, Login, Alert
 ){
 	$rootScope.$on('$stateChangeStart', function(
@@ -41,10 +42,17 @@ app.run(function(
 			return Alert.handleKeys(event);
 		});
 
-	$rootScope.timestamp = function(datetime) {
-		return datetime
-			? new Date(Date.parse(datetime))
-			: null;
+	$rootScope.toDate = function(datetime) {
+		var parts = datetime.split(' ');
+		var dates = parts[0].split('-');
+		var hours = parts[1].split(':');
+
+		var date = new Date(
+			dates[0], dates[1] - 1, dates[2],
+			hours[0], hours[1], hours[2]
+		);
+
+		return date;
 	};
 
 	$rootScope.toDateString = function(date) {
@@ -59,105 +67,126 @@ app.run(function(
 	};
 });
 
-app.config(function(
-	$stateProvider, $urlRouterProvider, $httpProvider
-) {
-	var baseTemplatePath = 'packages/lemon-tree/admin/js/templates/';
-
-	var templatePath = function(template) {
-		return baseTemplatePath+template;
-	};
-
-	$httpProvider.interceptors.push('AuthInterceptor');
-	$httpProvider.interceptors.push('FormInterceptor');
-
-	$urlRouterProvider.otherwise('/');
-
-	$stateProvider
-	.state('simple', {
-		templateUrl: templatePath('simple.html')
-	})
-	.state('base', {
-		templateUrl: templatePath('layout.html')
-	})
-	.state('simple.login', {
-		url: '/login',
-		templateUrl: templatePath('login.html'),
-		controller: 'LoginController'
-	})
-	.state('base.browse', {
-		url: '/',
-		templateUrl: templatePath('browse.html'),
-		controller: 'BrowseController'
-	})
-	.state('base.search', {
-		url: '/search',
-		templateUrl: templatePath('search.html'),
-		controller: 'SearchController'
-	})
-	.state('base.trash', {
-		url: '/trash',
-		templateUrl: templatePath('browse.html'),
-		controller: 'BrowseController'
-	})
-	.state('base.users', {
-		url: '/users',
-		templateUrl: templatePath('users.html'),
-		controller: 'UsersController'
-	})
-	.state('base.log', {
-		url: '/log?id',
-		templateUrl: templatePath('log.html'),
-		controller: 'LogController'
-	})
-	.state('base.group', {
-		url: '/group/{id:[0-9]+}',
-		templateUrl: templatePath('group.html'),
-		controller: 'GroupController'
-	})
-	.state('base.groupAdd', {
-		url: '/group/add',
-		templateUrl: templatePath('group.html'),
-		controller: 'GroupController'
-	})
-	.state('base.groupUsers', {
-		url: '/group/{id:[0-9]+}/users',
-		templateUrl: templatePath('groupUsers.html'),
-		controller: 'GroupUsersController'
-	})
-	.state('base.groupItems', {
-		url: '/group/{id:[0-9]+}/items',
-		templateUrl: templatePath('groupItems.html'),
-		controller: 'ItemPermissionsController'
-	})
-	.state('base.groupElements', {
-		url: '/group/{id:[0-9]+}/elements',
-		templateUrl: templatePath('groupElements.html'),
-		controller: 'ElementPermissionsController'
-	})
-	.state('base.user', {
-		url: '/user/{id:[0-9]+}',
-		templateUrl: templatePath('user.html'),
-		controller: 'UserController'
-	})
-	.state('base.userAdd', {
-		url: '/user/add',
-		templateUrl: templatePath('user.html'),
-		controller: 'UserController'
-	})
-	.state('base.profile', {
-		url: '/profile',
-		templateUrl: templatePath('profile.html'),
-		controller: 'ProfileController'
-	});
-
-	$.blockUI.defaults.message = '<img src="packages/lemon-tree/admin/img/loader.gif" />';
-	$.blockUI.defaults.css.border = 'none';
-	$.blockUI.defaults.css.background = 'none';
-	$.blockUI.defaults.overlayCSS.opacity = 0.2;
-	$.blockUI.defaults.fadeIn = 50;
-
+app.constant('helper', {
+	templatePath: function(name) {
+		return 'packages/lemon-tree/admin/js/templates/'+name+'.html';
+	}
 });
+
+app.config([
+	'$stateProvider', '$urlRouterProvider', '$httpProvider',
+	'helper',
+	function(
+		$stateProvider, $urlRouterProvider, $httpProvider,
+		helper
+	) {
+		var templatePath = helper.templatePath;
+
+		$httpProvider.interceptors.push('AuthInterceptor');
+		$httpProvider.interceptors.push('FormInterceptor');
+
+		$urlRouterProvider.otherwise('/');
+
+		$stateProvider
+		.state('simple', {
+			templateUrl: helper.templatePath('simple')
+		})
+		.state('base', {
+			templateUrl: helper.templatePath('layout')
+		})
+		.state('simple.login', {
+			url: '/login',
+			templateUrl: helper.templatePath('login'),
+			controller: 'LoginController'
+		})
+		.state('base.browse', {
+			url: '/',
+			templateUrl: templatePath('browse'),
+			controller: 'BrowseController'
+		})
+		.state('base.browseElement', {
+			url: '/browse/{classId:[a-z\.0-9]+}',
+			templateUrl: templatePath('browse'),
+			controller: 'BrowseController'
+		})
+		.state('base.editElement', {
+			url: '/edit/{classId:[a-z\.0-9]+}',
+			templateUrl: templatePath('edit'),
+			controller: 'EditController'
+		})
+		.state('base.search', {
+			url: '/search',
+			templateUrl: templatePath('search'),
+			controller: 'SearchController'
+		})
+		.state('base.trash', {
+			url: '/trash',
+			templateUrl: templatePath('browse'),
+			controller: 'BrowseController'
+		})
+		.state('base.users', {
+			url: '/users',
+			templateUrl: templatePath('users'),
+			controller: 'UsersController'
+		})
+		.state('base.log', {
+			url: '/log?id',
+			templateUrl: templatePath('log'),
+			controller: 'LogController'
+		})
+		.state('base.group', {
+			url: '/group/{id:[0-9]+}',
+			templateUrl: templatePath('group'),
+			controller: 'GroupController'
+		})
+		.state('base.groupAdd', {
+			url: '/group/add',
+			templateUrl: templatePath('group'),
+			controller: 'GroupController'
+		})
+		.state('base.groupUsers', {
+			url: '/group/{id:[0-9]+}/users',
+			templateUrl: templatePath('groupUsers'),
+			controller: 'GroupUsersController'
+		})
+		.state('base.groupItems', {
+			url: '/group/{id:[0-9]+}/items',
+			templateUrl: templatePath('groupItems'),
+			controller: 'ItemPermissionsController'
+		})
+		.state('base.groupElements', {
+			url: '/group/{id:[0-9]+}/elements',
+			templateUrl: templatePath('groupElements'),
+			controller: 'ElementPermissionsController'
+		})
+		.state('base.user', {
+			url: '/user/{id:[0-9]+}',
+			templateUrl: templatePath('user'),
+			controller: 'UserController'
+		})
+		.state('base.userAdd', {
+			url: '/user/add',
+			templateUrl: templatePath('user'),
+			controller: 'UserController'
+		})
+		.state('base.profile', {
+			url: '/profile',
+			templateUrl: templatePath('profile'),
+			controller: 'ProfileController'
+		})
+		.state('base.tree', {
+			template: 'tree.html',
+			controller: 'TreeController'
+		});
+
+		$.blockUI.defaults.message = '<img src="packages/lemon-tree/admin/img/loader.gif" />';
+		$.blockUI.defaults.css.border = 'none';
+		$.blockUI.defaults.css.background = 'none';
+		$.blockUI.defaults.overlayCSS.opacity = 0.2;
+		$.blockUI.defaults.fadeIn = 50;
+
+	}
+]);
 
 app.directive('submitOn', function() {
     return function(scope, element, attrs) {
@@ -185,6 +214,96 @@ app.directive('ctrlRight', function() {
 		});
     };
 });
+
+app.directive('tree', function(
+	$http, $window, helper
+) {
+    return {
+		restrict: 'E',
+		replace: true,
+		templateUrl: helper.templatePath('tree'),
+		link: function(scope, element, attrs) {
+			var node = attrs.node;
+			var tree = element.parent().data('tree');
+
+			scope.itemList = [];
+			scope.itemElementList = [];
+			scope.treeCount = [];
+			scope.tree = [];
+			scope.treeView = [];
+			scope.subTree = [];
+
+			scope.isTreeView = function(classId) {
+				if (typeof(scope.treeView[classId]) !== 'undefined') {
+					return scope.treeView[classId];
+				}
+				scope.treeView[classId] =
+					$window.localStorage.getItem('tree_'+classId)
+					? true : false;
+				return scope.treeView[classId];
+			};
+
+			scope.open = function(classId) {
+				$('.padding[node="'+classId+'"]').slideDown('fast');
+				scope.treeView[classId] = true;
+				$window.localStorage.setItem('tree_'+classId, true);
+			};
+
+			scope.hide = function(classId) {
+				$('.padding[node="'+classId+'"]').slideUp('fast');
+				scope.treeView[classId] = false;
+				$window.localStorage.removeItem('tree_'+classId);
+			};
+
+			if ( ! node) {
+				$http({
+					method: 'GET',
+					url: 'api/tree'
+				}).then(
+					function(response) {
+						scope.itemList = response.data.itemList;
+						scope.itemElementList = response.data.itemElementList;
+						scope.treeCount = response.data.treeCount;
+						scope.subTree = response.data.subTree;
+					},
+					function(error) {
+						console.log(error);
+					}
+				);
+			} else if (tree) {
+				scope.itemList = tree.itemList;
+				scope.itemElementList = tree.itemElementList;
+				scope.treeCount = tree.treeCount;
+				scope.subTree = tree.subTree;
+			}
+		}
+	};
+});
+
+app.directive('subtree', function ($compile) {
+	return {
+		restrict: "E",
+		replace: true,
+		scope: {
+			node: "=node",
+			tree: "=tree",
+			show: "=show",
+		},
+		template: '<div class="padding dnone"></div>',
+		link: function (scope, element, attrs) {
+			if (scope.tree) {
+				var child = $('<tree node="'+scope.node+'"></tree>');
+				element.data('tree', scope.tree);
+				element.attr('node', scope.node);
+				element.append(child);
+				if (scope.show) {
+					element.show();
+				}
+				$compile(element.contents())(scope);
+			}
+		}
+	}
+})
 
 app.factory('AuthToken', function($window) {
 	var tokenKey = 'token';
@@ -457,6 +576,55 @@ navbar.controller('NavbarController', function(
 		$rootScope.loggedUser = null;
 		$state.go('simple.login');
 	};
+});
+
+var tree = angular.module('TreeCtrl', []);
+
+tree.controller('TreeController', function(
+	$scope, $http, $state, $stateParams, $window
+) {
+	var classId = $stateParams.classId;
+
+	$scope.itemList = [];
+	$scope.itemElementList = [];
+	$scope.treeCount = [];
+	$scope.tree = [];
+	$scope.treeView = [];
+
+	$scope.isTreeView = function(classId) {
+		if (typeof($scope.treeView[classId]) !== 'undefined') {
+			return $scope.treeView[classId];
+		}
+		$scope.treeView[classId] =
+			$window.localStorage.getItem('tree_'+classId)
+			? true : false;
+		return $scope.treeView[classId];
+	};
+
+	$scope.open = function(classId) {
+		$scope.treeView[classId] = true;
+		$window.localStorage.setItem('tree_'+classId, true);
+	};
+
+	$scope.hide = function(classId) {
+		$scope.treeView[classId] = false;
+		$window.localStorage.removeItem('tree_'+classId);
+	};
+
+	$http({
+		method: 'GET',
+		url: (classId ? 'api/tree/'+classId : 'api/tree')
+	}).then(
+		function(response) {
+			$scope.itemList = response.data.itemList;
+			$scope.itemElementList = response.data.itemElementList;
+			$scope.treeCount = response.data.treeCount;
+			$scope.tree = response.data.tree;
+		},
+		function(error) {
+			console.log(error);
+		}
+	);
 });
 
 var browse = angular.module('BrowseCtrl', []);

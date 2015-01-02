@@ -8,6 +8,10 @@ class BrowseController extends \BaseController {
 
 		$categoryList = \Category::orderBy('order')->get();
 
+		foreach ($categoryList as $category) {
+			$category->classId = $category->getClassId();
+		}
+
 		$scope['categoryList'] = $categoryList;
 
 		return \Response::json($scope);

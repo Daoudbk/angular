@@ -14,9 +14,9 @@ trait ElementTrait {
 	public function getDates()
 	{
 		return array(
-			static::CREATED_AT,
-			static::UPDATED_AT,
-			$this->getDeletedAtColumn()
+			'created_at',
+			'updated_at',
+			'deleted_at',
 		);
 	}
 

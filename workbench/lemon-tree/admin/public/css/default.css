@@ -34,48 +34,78 @@ body {
  */
 
 /* Hide for mobile, show later */
-.sidebar {
+.tree {
 	display: none;
-	padding: 20px;
+	margin: 0;
+	padding: 10px 5px 20px 10px;
+	background: url(../img/background.jpg);
+	font-family: arial, sans-serif;
+	font-size: 14px;
 	white-space: nowrap;
 }
 @media (min-width: 768px) {
-	.sidebar {
+	.tree {
+		display: block;
 		position: fixed;
 		top: 51px;
 		bottom: 0;
 		left: 0;
 		z-index: 1000;
-		display: block;
-		padding: 20px;
-		white-space: nowrap;
 		overflow-x: hidden;
-		overflow-y: hidden; /* Scrollable contents if viewport is shorter than content. */
-		background: url(../img/background.jpg);
+		overflow-y: hidden;
 	}
 }
 
-/* Sidebar navigation */
-.nav-sidebar {
-	margin-right: -21px; /* 20px padding + 1px border */
-	margin-bottom: 20px;
-	margin-left: -20px;
-	background: none;
-}
-.nav-sidebar > li > a {
-	padding-right: 20px;
-	padding-left: 20px;
+.tree a {
 	color: #eee;
+	text-decoration: none;
 }
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
+
+.tree .margin {
+	margin: 5px 0 10px 0;
+}
+
+.tree a:hover,
+.tree a:focus {
 	color: #fff;
-	background: rgba(255,255,255,0.2);
+	text-decoration: underline;
 }
-.nav > li > a:hover,
-.nav > li > a:focus {
-	background: rgba(255,255,255,0.2);
+
+.tree .item {
+	margin: 10px 0 5px 0;
+	font-size: 11px;
+	font-weight: bold;
+	color: #e8a700;
+}
+
+.tree .padding {
+	margin-left: 10px;
+	padding-left: 20px;
+}
+
+.tree .plus {
+	width: 10px;
+	height: 10px;
+	float: left;
+	margin: 1px 10px 0 0;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.tree .minus {
+	width: 10px;
+	height: 10px;
+	float: left;
+	margin: 1px 10px 0 0;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.tree .empty {
+	width: 10px;
+	height: 10px;
+	float: left;
+	margin: 1px 10px 0 0;
 }
 
 /*
@@ -123,6 +153,10 @@ h3 > b {
 	color: #666;
 }
 
+.dnone {
+	display: none;
+}
+
 .dashed {
 	border-bottom: 1px dashed;
 }
@@ -151,33 +185,33 @@ table .light {
 	height: 100%;
 }
 
-.page-animate[ui-view].ng-enter {
+.page-animate.ng-enter {
 	-webkit-transition: all 1s ease;
 	-moz-transition: all 1s ease;
 	-o-transition: all 1s ease;
 	transition: all 1s ease;
 }
 
-.page-animate[ui-view].ng-leave {
+.page-animate.ng-leave {
 	-webkit-transition: all .5s ease;
 	-moz-transition: all .5s ease;
 	-o-transition: all .5s ease;
 	transition: all .5s ease;
 }
 
-.page-animate[ui-view].ng-enter {
+.page-animate.ng-enter {
 	opacity: 0;
 }
 
-.page-animate[ui-view].ng-enter-active {
+.page-animate.ng-enter-active {
 	opacity: 1;
 }
 
-.page-animate[ui-view].ng-leave {
+.page-animate.ng-leave {
 	opacity: 1;
 }
 
-.page-animate[ui-view].ng-leave-active {
+.page-animate.ng-leave-active {
 	opacity: 0;
 }
 
@@ -219,8 +253,16 @@ td .halflings {
 	color: inherit;
 }
 
+.tree .halflings {
+	color: #ccc;
+}
+
 .danger .halflings {
 	color: orange;
+}
+
+ul.nav .glyphicons {
+	color: white;
 }
 
 ul.nav > li.dropdown > a {

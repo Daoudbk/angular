@@ -25,10 +25,10 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="category in categoryList">
-				<td class="first"><a ui-sref="base.browse({id: category.id})"><span class="halflings halflings-menu-right"></span></a></td>
-				<td><a ui-sref="base.browse({id: category.id})"><span class="halflings halflings-pencil"></span></a> <a ui-sref="base.browse({id: category.id})">{{category.name}}</a></td>
-				<td>{{timestamp(category.created_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(category.created_at) | date: 'HH:mm:ss'}}</small></td>
-				<td>{{timestamp(category.updated_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(category.updated_at) | date: 'HH:mm:ss'}}</small></td>
+				<td class="first"><a ui-sref="base.browseElement({classId: category.classId})"><span class="halflings halflings-menu-right"></span></a></td>
+				<td><a ui-sref="base.editElement({classId: category.classId})"><span class="halflings halflings-pencil"></span></a> <a ui-sref="base.editElement({classId: category.classId})">{{category.name}}</a></td>
+				<td>{{toDate(category.created_at) | date: 'dd.MM.yyyy'}}<br /><small>{{toDate(category.created_at) | date: 'HH:mm:ss'}}</small></td>
+				<td>{{toDate(category.updated_at) | date: 'dd.MM.yyyy'}}<br /><small>{{toDate(category.updated_at) | date: 'HH:mm:ss'}}</small></td>
 				<td class="last"><input type="checkbox"></td>
 			</tr>
 		</tbody>

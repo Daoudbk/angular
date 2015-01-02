@@ -64,7 +64,7 @@
 					<td>{{userAction.user.login}}<br /><small class="grey">{{userAction.user.first_name}} {{userAction.user.last_name}}</small></td>
 					<td><a href="{{userAction.url}}">{{userAction.action_type_name}}</a></td>
 					<td>{{userAction.comments}}</td>
-					<td>{{timestamp(userAction.created_at) | date: 'dd.MM.yyyy'}}<br /><small>{{timestamp(userAction.created_at) | date: 'HH:mm:ss'}}</small></td>
+					<td>{{toDate(userAction.created_at) | date: 'dd.MM.yyyy'}}<br /><small>{{toDate(userAction.created_at) | date: 'HH:mm:ss'}}</small></td>
 				</tr>
 			</tbody>
 		</table>
