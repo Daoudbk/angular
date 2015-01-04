@@ -66,7 +66,7 @@ class LinkProperty extends BaseProperty {
 		return null;
 	}
 
-	public function getElementEditView()
+	public function getEditView()
 	{
 		$element = $this->element();
 		$item = $element ? $element->getItem() : null;
@@ -83,12 +83,7 @@ class LinkProperty extends BaseProperty {
 			'mainProperty' => $mainProperty,
 		);
 
-		try {
-			$view = $this->getClassName().'.elementEdit';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
 
 }

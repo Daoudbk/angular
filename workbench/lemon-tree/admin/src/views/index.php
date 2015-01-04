@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lemon Tree</title>
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/bootstrap.min.css')?>">
+<link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/bootstrap-additions.min.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons-halflings.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons-bootstrap.css')?>">
@@ -23,6 +24,8 @@
 <script src="<?=asset('packages/lemon-tree/admin/js/perfect-scrollbar.min.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/perfect-scrollbar.with-mousewheel.min.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-perfect-scrollbar.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/angular-strap.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/angular-strap.tpl.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/app.js')?>"></script>
 </head>
 <body ng-app="adminApp" ui-view>

@@ -1,9 +1,11 @@
 var app = angular.module('adminApp', [
-	'ui.router', 'ui.bootstrap', 'ngAnimate', 'perfect_scrollbar',
+	'ui.router', 'ui.bootstrap', 'ngAnimate',
+	'perfect_scrollbar',
+	'mgcrea.ngStrap.datepicker', 'mgcrea.ngStrap.timepicker',
 	'ModalCtrl',
 	'LoginCtrl',
-	'NavbarCtrl', 'TreeCtrl',
-	'BrowseCtrl', 'UsersCtrl',
+	'NavbarCtrl',
+	'BrowseCtrl', 'UsersCtrl'
 ]);
 
 app.run(function(
@@ -43,6 +45,8 @@ app.run(function(
 		});
 
 	$rootScope.toDate = function(datetime) {
+		if ( ! datetime) return null;
+
 		var parts = datetime.split(' ');
 		var dates = parts[0].split('-');
 		var hours = parts[1].split(':');
@@ -105,12 +109,12 @@ app.config([
 			controller: 'BrowseController'
 		})
 		.state('base.browseElement', {
-			url: '/browse/{classId:[a-z\.0-9]+}',
+			url: '/browse/{classId:[A-Za-z\.0-9]+}',
 			templateUrl: templatePath('browse'),
 			controller: 'BrowseController'
 		})
 		.state('base.editElement', {
-			url: '/edit/{classId:[a-z\.0-9]+}',
+			url: '/edit/{classId:[A-Za-z\.0-9]+}',
 			templateUrl: templatePath('edit'),
 			controller: 'EditController'
 		})
@@ -121,8 +125,8 @@ app.config([
 		})
 		.state('base.trash', {
 			url: '/trash',
-			templateUrl: templatePath('browse'),
-			controller: 'BrowseController'
+			templateUrl: templatePath('trash'),
+			controller: 'TrashController'
 		})
 		.state('base.users', {
 			url: '/users',
@@ -173,10 +177,6 @@ app.config([
 			url: '/profile',
 			templateUrl: templatePath('profile'),
 			controller: 'ProfileController'
-		})
-		.state('base.tree', {
-			template: 'tree.html',
-			controller: 'TreeController'
 		});
 
 		$.blockUI.defaults.message = '<img src="packages/lemon-tree/admin/img/loader.gif" />';
@@ -244,15 +244,15 @@ app.directive('tree', function(
 			};
 
 			scope.open = function(classId) {
-				$('.padding[node="'+classId+'"]').slideDown('fast');
-				scope.treeView[classId] = true;
 				$window.localStorage.setItem('tree_'+classId, true);
+				scope.treeView[classId] = true;
+				$('.padding[node="'+classId+'"]').slideDown('fast');
 			};
 
 			scope.hide = function(classId) {
-				$('.padding[node="'+classId+'"]').slideUp('fast');
-				scope.treeView[classId] = false;
 				$window.localStorage.removeItem('tree_'+classId);
+				scope.treeView[classId] = false;
+				$('.padding[node="'+classId+'"]').slideUp('fast');
 			};
 
 			if ( ! node) {
@@ -285,9 +285,9 @@ app.directive('subtree', function ($compile) {
 		restrict: "E",
 		replace: true,
 		scope: {
-			node: "=node",
-			tree: "=tree",
-			show: "=show",
+			node: "=",
+			tree: "=",
+			show: "=",
 		},
 		template: '<div class="padding dnone"></div>',
 		link: function (scope, element, attrs) {
@@ -302,8 +302,30 @@ app.directive('subtree', function ($compile) {
 				$compile(element.contents())(scope);
 			}
 		}
-	}
-})
+	};
+});
+
+app.directive('property', function (
+	helper
+) {
+	return {
+		restrict: "E",
+		replace: true,
+		scope: {
+			type: "=",
+			mode: "=",
+			view: "=",
+		},
+		template: '<ng-include src="getTemplateUrl()"></ng-include>',
+		link: function (scope, element, attrs) {
+			scope.getTemplateUrl = function() {
+				return helper.templatePath(
+					'properties/'+scope.type+'/'+attrs.mode
+				);
+			};
+		}
+	};
+});
 
 app.factory('AuthToken', function($window) {
 	var tokenKey = 'token';
@@ -371,7 +393,11 @@ app.factory('FormInterceptor', function ($q, $rootScope, $injector, Alert) {
 		response: function (response) {
 			var state = $injector.get('$state');
 
-			if (response.data.state === 'error_admin_access_denied') {
+			if (response.data.state === 'error_element_not_found') {
+				state.go('base.browse');
+			} else if (response.data.state === 'error_element_access_denied') {
+				state.go('base.browse');
+			} else if (response.data.state === 'error_admin_access_denied') {
 				state.go('base.browse');
 			} else if (response.data.state === 'error_group_not_found') {
 				state.go('base.users');
@@ -578,48 +604,38 @@ navbar.controller('NavbarController', function(
 	};
 });
 
-var tree = angular.module('TreeCtrl', []);
+var browse = angular.module('BrowseCtrl', []);
 
-tree.controller('TreeController', function(
-	$scope, $http, $state, $stateParams, $window
+browse.controller('BrowseController', function(
+	$rootScope, $scope, $http, $stateParams
 ) {
 	var classId = $stateParams.classId;
 
-	$scope.itemList = [];
-	$scope.itemElementList = [];
-	$scope.treeCount = [];
-	$scope.tree = [];
-	$scope.treeView = [];
+	$rootScope.activeIcon = 'browse';
 
-	$scope.isTreeView = function(classId) {
-		if (typeof($scope.treeView[classId]) !== 'undefined') {
-			return $scope.treeView[classId];
-		}
-		$scope.treeView[classId] =
-			$window.localStorage.getItem('tree_'+classId)
-			? true : false;
-		return $scope.treeView[classId];
-	};
+	$scope.currentElement = null;
+	$scope.categoryList = [];
 
-	$scope.open = function(classId) {
-		$scope.treeView[classId] = true;
-		$window.localStorage.setItem('tree_'+classId, true);
-	};
-
-	$scope.hide = function(classId) {
-		$scope.treeView[classId] = false;
-		$window.localStorage.removeItem('tree_'+classId);
-	};
+	if (classId) {
+		$http({
+			method: 'GET',
+			url: 'api/element/'+classId
+		}).then(
+			function(response) {
+				$scope.currentElement = response.data.currentElement;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	}
 
 	$http({
 		method: 'GET',
-		url: (classId ? 'api/tree/'+classId : 'api/tree')
+		url: 'api/browse'
 	}).then(
 		function(response) {
-			$scope.itemList = response.data.itemList;
-			$scope.itemElementList = response.data.itemElementList;
-			$scope.treeCount = response.data.treeCount;
-			$scope.tree = response.data.tree;
+			$scope.categoryList = response.data.categoryList;
 		},
 		function(error) {
 			console.log(error);
@@ -627,14 +643,61 @@ tree.controller('TreeController', function(
 	);
 });
 
-var browse = angular.module('BrowseCtrl', []);
+browse.controller('EditController', function(
+	$rootScope, $scope, $http, $stateParams
+) {
+	var classId = $stateParams.classId;
 
-browse.controller('BrowseController', function(
+	$rootScope.activeIcon = 'edit';
+
+	$scope.currentElement = null;
+	$scope.parentList = [];
+	$scope.currentItem = null;
+	$scope.propertyList = [];
+
+	$http({
+		method: 'GET',
+		url: 'api/element/'+classId
+	}).then(
+		function(response) {
+			$scope.currentElement = response.data.currentElement;
+			$scope.parentList = response.data.parentList;
+			$scope.currentItem = response.data.currentItem;
+			$scope.propertyList = response.data.propertyList;
+			console.log($scope.propertyList);
+		},
+		function(error) {
+			console.log(error);
+		}
+	);
+});
+
+browse.controller('TrashController', function(
 	$rootScope, $scope, $http
 ) {
-	$rootScope.activeIcon = 'browse';
+	$rootScope.activeIcon = 'trash';
 
-	$scope.categoryList = null;
+	$scope.categoryList = [];
+
+	$http({
+		method: 'GET',
+		url: 'api/browse'
+	}).then(
+		function(response) {
+			$scope.categoryList = response.data.categoryList;
+		},
+		function(error) {
+			console.log(error);
+		}
+	);
+});
+
+browse.controller('SearchController', function(
+	$rootScope, $scope, $http
+) {
+	$rootScope.activeIcon = 'search';
+
+	$scope.categoryList = [];
 
 	$http({
 		method: 'GET',
@@ -1198,15 +1261,15 @@ users.controller('LogController', function(
 
 		$scope.dateFromOpened = true;
 		$scope.dateToOpened = false;
-	 };
+	};
 
-	 $scope.openDateTo = function($event) {
+	$scope.openDateTo = function($event) {
 		$event.preventDefault();
 		$event.stopPropagation();
 
 		$scope.dateToOpened = true;
 		$scope.dateFromOpened = false;
-	 };
+	};
 
 });
 

@@ -28,7 +28,7 @@ class OrderProperty extends BaseProperty {
 
 	public function getHidden()
 	{
-		return false;
+		return true;
 	}
 
 	public function set($field = null)

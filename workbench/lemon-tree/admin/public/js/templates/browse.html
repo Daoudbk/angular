@@ -1,9 +1,9 @@
 <div ng-controller="BrowseController">
 	<ul class="breadcrumb">
-		<li><a ui-sref="base.browse">Корень сайта</a></li>
-		<li class="active">Статистика</li>
+		<li ng-if="currentElement === null" class="active">Корень сайта</li>
+		<li ng-if="currentElement"><a ui-sref="base.browse">Корень сайта</a></li>
+		<li ng-if="currentElement" class="active">{{currentElement.name}}</li>
 	</ul>
-
 	<p class="controls">
 		<button type="button" class="btn btn-default disabled"><span class="halflings halflings-triangle-top"></span> Наверх</button>
 		<button type="button" class="btn btn-default"><span class="halflings halflings-pencil"></span> Редактировать</button>
@@ -12,9 +12,7 @@
 		<button type="button" class="btn btn-default"><span class="halflings halflings-arrow-right"></span> Переместить</button>
 		<button type="button" class="btn btn-warning"><span class="halflings halflings-trash"></span> Удалить</button>
 	</p>
-
 	<p>Добавить: <a href>Категория товаров</a>, <a href>Раздел сайта</a>, <a href>Служебный раздел</a></p>
-
 	<table class="element-list table-striped table-hover" ng-show="categoryList.length">
 		<thead>
 			<th class="first">ID</th>

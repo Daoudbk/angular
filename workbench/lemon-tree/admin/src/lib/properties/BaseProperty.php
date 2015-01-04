@@ -5,6 +5,7 @@ abstract class BaseProperty {
 	protected $item = null;
 	protected $name = null;
 	protected $title = null;
+	protected $class = null;
 
 	protected $show = false;
 	protected $required = false;
@@ -22,6 +23,7 @@ abstract class BaseProperty {
 	public function __construct($name)
 	{
 		$this->name = $name;
+		$this->class = class_basename(get_class($this));
 
 		return $this;
 	}
@@ -227,7 +229,7 @@ abstract class BaseProperty {
 		return null;
 	}
 
-	public function getElementEditView()
+	public function getEditView()
 	{
 		$scope = array(
 			'name' => $this->getName(),
@@ -236,12 +238,7 @@ abstract class BaseProperty {
 			'readonly' => $this->getReadonly(),
 		);
 
-		try {
-			$view = $this->getClassName().'.elementEdit';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
 
 	public function getBrowseEditView()

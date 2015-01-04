@@ -24,25 +24,9 @@
 				</div>
 				<div class="form-group col-md-20">
 					<label>Дата операции:</label>
-					<div class="row">
-						<div class="col-md-2">от</div>
-						<div class="col-md-22">
-							<p class="input-group">
-								<input type="text" id="dateFrom" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="filter.dateFrom" is-open="dateFromOpened" current-text="Сегодня" clear-text="Очистить" close-text="Закрыть" />
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-default" ng-click="openDateFrom($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-								</span>
-							</p>
-						</div>
-						<div class="col-md-2">до</div>
-						<div class="col-md-22">
-							<p class="input-group">
-								<input type="text" id="dateTo" class="form-control" datepicker-popup="dd.MM.yyyy" ng-model="filter.dateTo" is-open="dateToOpened" current-text="Сегодня" clear-text="Очистить" close-text="Закрыть" />
-								<span class="input-group-btn">
-									<button type="button" class="btn btn-default" ng-click="openDateTo($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-								</span>
-							</p>
-						</div>
+					<div>
+						от <input ng-model="filter.dateFrom" type="text" class="form-control date" date-format="dd.MM.yyyy" model-date-format="yyyy-MM-dd" date-type="date" autoclose="1" start-week="1" placement="bottom-left" bs-datepicker>
+						&nbsp; до <input ng-model="filter.dateTo" type="text" class="form-control date" date-format="dd.MM.yyyy" model-date-format="yyyy-MM-dd" date-type="date" autoclose="1" start-week="1" placement="bottom-right" bs-datepicker>
 					</div>
 				</div>
 			</div>

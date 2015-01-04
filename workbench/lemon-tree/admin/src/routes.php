@@ -135,6 +135,6 @@ Route::group(array(
 
 	Route::get('tree', 'LemonTree\TreeController@show');
 
-	Route::get('tree/{classId}', 'LemonTree\TreeController@show');
+	Route::get('element/{classId}', 'LemonTree\EditController@getElement');
 
 });

@@ -155,7 +155,7 @@ class OneToOneProperty extends BaseProperty {
 		return null;
 	}
 
-	public function getElementEditView()
+	public function getEditView()
 	{
 		$site = \App::make('site');
 
@@ -180,12 +180,7 @@ class OneToOneProperty extends BaseProperty {
 			$scope['treeView'] = $treeView ? $treeView : '';
 		}
 
-		try {
-			$view = $this->getClassName().'.elementEdit';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
 
 	public function getElementMoveView()

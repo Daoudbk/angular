@@ -350,7 +350,7 @@ class ImageProperty extends BaseProperty {
 		return null;
 	}
 
-	public function getElementEditView()
+	public function getEditView()
 	{
 		$scope = array(
 			'name' => $this->getName(),
@@ -379,14 +379,7 @@ class ImageProperty extends BaseProperty {
 			);
 		}
 
-		try {
-			$view = $this->getClassName().'.elementEdit';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {
-			return $e->getMessage();
-		}
-
-		return null;
+		return $scope;
 	}
 
 	public function getElementSearchView()
