@@ -1,11 +1,9 @@
 var app = angular.module('adminApp', [
-	'ui.router', 'ui.bootstrap', 'ngAnimate',
+	'ngAnimate',
+	'ui.router', 'ui.bootstrap', 'ui.tinymce',
 	'perfect_scrollbar',
 	'mgcrea.ngStrap.datepicker', 'mgcrea.ngStrap.timepicker',
-	'ModalCtrl',
-	'LoginCtrl',
-	'NavbarCtrl',
-	'BrowseCtrl', 'UsersCtrl'
+	'ModalCtrl', 'LoginCtrl', 'NavbarCtrl', 'BrowseCtrl', 'UsersCtrl'
 ]);
 
 app.run(function(
@@ -74,6 +72,28 @@ app.run(function(
 app.constant('helper', {
 	templatePath: function(name) {
 		return 'packages/lemon-tree/admin/js/templates/'+name+'.html';
+	}
+});
+
+app.constant('uiTinymceConfig', {
+	language: 'ru',
+	plugins: 'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table contextmenu paste textcolor responsivefilemanager',
+	toolbar: 'newdocument | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | preview code',
+	image_advtab: true,
+	forced_root_block: 'p',
+	entity_encoding: 'raw',
+	convert_urls: false,
+	external_filemanager_path: '/packages/lemon-tree/admin/filemanager/',
+	filemanager_title: 'Файловый менеджер',
+	external_plugins: {
+		'filemanager': '/packages/lemon-tree/admin/filemanager/plugin.min.js'
+	},
+	setup: function(editor) {
+		editor.on('keypress', function(event) {
+			return LT.onCtrlS(event);
+		}).on('keydown', function(event) {
+			return LT.onCtrlS(event);
+		});
 	}
 });
 
@@ -664,7 +684,6 @@ browse.controller('EditController', function(
 			$scope.parentList = response.data.parentList;
 			$scope.currentItem = response.data.currentItem;
 			$scope.propertyList = response.data.propertyList;
-			console.log($scope.propertyList);
 		},
 		function(error) {
 			console.log(error);

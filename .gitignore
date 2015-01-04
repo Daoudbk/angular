@@ -7,3 +7,13 @@ composer.lock
 .env.php
 .DS_Store
 Thumbs.db
+/public/assets/
+/public/filemanager/
+/public/filemanager.thumbs/
+/public/packages/
+
+
+
+
+
+

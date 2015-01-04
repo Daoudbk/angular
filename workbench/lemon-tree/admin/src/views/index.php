@@ -26,6 +26,8 @@
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-perfect-scrollbar.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-strap.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-strap.tpl.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/tinymce/tinymce.min.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/ui-tinymce.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/app.js')?>"></script>
 </head>
 <body ng-app="adminApp" ui-view>
