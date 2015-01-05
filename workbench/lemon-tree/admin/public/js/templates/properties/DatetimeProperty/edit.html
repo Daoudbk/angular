@@ -1,5 +1,6 @@
 <div ng-if="view.readonly">
-	<label for="{{view.name}}">{{view.title}}</label>: <span>{{view.value ? view.value.human : 'не определено' }}</span>
+	<label for="{{view.name}}">{{view.title}}</label>:
+	<span>{{view.value ? view.value.human : 'не определено' }}</span>
 </div>
 <div ng-if=" ! view.readonly">
 	<label for="{{view.name}}">{{view.title}}</label>:

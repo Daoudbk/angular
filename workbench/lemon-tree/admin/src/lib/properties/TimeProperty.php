@@ -39,9 +39,24 @@ class TimeProperty extends BaseProperty {
 		parent::setElement($element);
 
 		if (is_string($this->value)) {
-			$this->value = Carbon::createFromFormat($this->format, $this->value);
-		} elseif ( ! $this->value && $this->getFillNow()) {
+			try {
+				$this->value = Carbon::createFromFormat($this->format, $this->value);
+			} catch (\Exception $e) {}
+		}
+
+		if ( ! $this->value && $this->getFillNow()) {
 			$this->value = Carbon::now();
+		}
+
+		if ($this->value) {
+			$this->value = [
+				'value' => $this->value->format(static::$format),
+				'time' => $this->value->toTimeString(),
+				'hour' => $this->value->hour,
+				'minute' => $this->value->minute,
+				'second' => $this->value->second,
+				'human' => $this->value->format('H:i:s')
+			];
 		}
 
 		return $this;

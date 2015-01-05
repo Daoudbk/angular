@@ -2,12 +2,14 @@ var app = angular.module('adminApp', [
 	'ngAnimate',
 	'ui.router', 'ui.bootstrap',
 	'mgcrea.ngStrap.datepicker', 'mgcrea.ngStrap.timepicker',
-	'ModalCtrl', 'LoginCtrl', 'NavbarCtrl', 'BrowseCtrl', 'UsersCtrl'
+	'mgcrea.ngStrap.typeahead',
+	'ModalCtrl', 'LoginCtrl', 'NavbarCtrl', 'FavoritesCtrl',
+	'BrowseCtrl', 'UsersCtrl'
 ]);
 
 app.run(function(
 	$rootScope, $state, $document, $window,
-	AuthToken, Login, Alert
+	AuthToken, Login, Alert, Favorite
 ){
 	$rootScope.$on('$stateChangeStart', function(
 		event, toState, toParams, fromState, fromParams
@@ -31,6 +33,8 @@ app.run(function(
 				$state.go('simple.login');
 			}
 		}
+
+		Favorite.getList();
 	});
 
 	$document
@@ -82,11 +86,29 @@ app.value('uiTinymceConfig', {
 	forced_root_block: 'p',
 	entity_encoding: 'raw',
 	convert_urls: false,
-	external_filemanager_path: '/packages/lemon-tree/admin/filemanager/',
-	filemanager_title: 'Файловый менеджер',
-	external_plugins: {
-		'filemanager': '/packages/lemon-tree/admin/filemanager/plugin.min.js'
-	}
+	file_browser_callback: function(field_name, url, type, win) {
+		var
+			w = window,
+			d = document,
+			e = d.documentElement,
+			g = d.getElementsByTagName('body')[0],
+			x = w.innerWidth || e.clientWidth || g.clientWidth,
+			y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+		tinyMCE.activeEditor.windowManager.open({
+			file : '/admin#',
+			title : 'Файловый менеджер',
+			width : x * 0.5,
+			height : y * 0.5,
+			resizable : "yes",
+			close_previous : "no"
+		});
+	},
+//	filemanager_title: 'Файловый менеджер',
+//	external_filemanager_path: '/packages/lemon-tree/admin/filemanager/plugin.min.js',
+//	external_plugins: {
+//		'filemanager': '/packages/lemon-tree/admin/filemanager/plugin.min.js'
+//	}
 });
 
 app.config([
@@ -410,7 +432,7 @@ app.directive('subtree', function ($compile) {
 			show: "=",
 		},
 		template: '<div class="padding dnone"></div>',
-		link: function (scope, element, attrs) {
+		link: function(scope, element, attrs) {
 			if (scope.tree) {
 				var child = $('<tree node="'+scope.node+'"></tree>');
 				element.data('tree', scope.tree);
@@ -425,9 +447,7 @@ app.directive('subtree', function ($compile) {
 	};
 });
 
-app.directive('property', function (
-	helper
-) {
+app.directive('property', function ($http, helper) {
 	return {
 		restrict: "E",
 		replace: true,
@@ -437,12 +457,86 @@ app.directive('property', function (
 			view: "=",
 		},
 		template: '<ng-include src="getTemplateUrl()"></ng-include>',
-		link: function (scope, element, attrs) {
+		link: function(scope, element, attrs) {
+			scope.selected = null;
+
 			scope.getTemplateUrl = function() {
 				return helper.templatePath(
 					'properties/'+scope.type+'/'+attrs.mode
 				);
 			};
+
+			scope.getList = function(viewValue) {
+				var params = {term: viewValue};
+				return $http.get('api/hint/'+scope.view.relatedClass, {params: params})
+					.then(function(response) {
+						return response.data;
+					});
+			};
+		}
+	};
+});
+
+app.directive('favorite', function (Favorite, helper) {
+	return {
+		restrict: "E",
+		replace: true,
+		scope: {
+			classId: "=",
+		},
+		templateUrl: helper.templatePath('favorite'),
+		link: function (scope, element, attrs) {
+			scope.isFavorite = function() {
+				return Favorite.isFavorite(scope.classId);
+			};
+
+			scope.toggle = function() {
+				Favorite.toggle(scope.classId);
+			};
+		}
+	};
+});
+
+app.factory('Favorite', function ($rootScope, $http) {
+	$rootScope.favoriteList = [];
+
+	return {
+		getList: function() {
+			$http({
+				method: 'GET',
+				url: 'api/favorites'
+			}).then(
+				function(response) {
+					$rootScope.favoriteList = response.data.favoriteList;
+				},
+				function(error) {
+					console.log(error);
+				}
+			);
+		},
+		isFavorite: function(classId) {
+			for (var i in $rootScope.favoriteList) {
+				var favorite = $rootScope.favoriteList[i];
+
+				if (classId === favorite.classId) {
+					return true;
+				}
+			}
+
+			return false;
+		},
+		toggle: function(classId) {
+			$http({
+				method: 'POST',
+				url: 'api/favorites/'+classId
+			}).then(
+				function(response) {
+					$rootScope.favoriteList = response.data.favoriteList;
+				},
+				function(error) {
+					console.log(error);
+				}
+			);
 		}
 	};
 });
@@ -724,6 +818,18 @@ navbar.controller('NavbarController', function(
 	};
 });
 
+var favorites = angular.module('FavoritesCtrl', []);
+
+favorites.controller('FavoritesController', function(
+	$scope, Favorite
+) {
+
+
+	$scope.toggleFavorite = function(classId) {
+		return Favorite.toggleFavorite(classId);
+	}
+});
+
 var browse = angular.module('BrowseCtrl', []);
 
 browse.controller('BrowseController', function(
@@ -764,7 +870,8 @@ browse.controller('BrowseController', function(
 });
 
 browse.controller('EditController', function(
-	$rootScope, $scope, $http, $stateParams
+	$rootScope, $scope, $http, $stateParams,
+	Favorite
 ) {
 	var classId = $stateParams.classId;
 
@@ -790,13 +897,16 @@ browse.controller('EditController', function(
 		}
 	);
 
+	$scope.isFavorite = function() {
+		return Favorite.isFavorite(classId);
+	}
+
+	$scope.toggleFavorite = function() {
+		return Favorite.toggleFavorite(classId);
+	}
+
 	$scope.submit = function() {
-		$http({
-			method: 'GET',
-			url: 'api/element/'+classId,
-			data: $scope.profile,
-			checkForm: true,
-		});
+		console.log($scope);
 	};
 });
 
@@ -854,7 +964,7 @@ users.controller('ProfileController', function(
 	$scope.submit = function() {
 		$http({
 			method: 'POST',
-			url: 'api/profile/save',
+			url: 'api/profile',
 			data: $scope.profile,
 			checkForm: true,
 		});

@@ -39,6 +39,14 @@ body {
 /* Hide for mobile, show later */
 .tree {
 	display: none;
+	position: fixed;
+	top: 51px;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+	float: left;
+	overflow-x: auto;
+	overflow-y: scroll;
 	margin: 0;
 	padding: 10px 5px 20px 15px;
 	background: url(../img/background.jpg);
@@ -47,15 +55,33 @@ body {
 	white-space: nowrap;
 }
 
+/*
+ * Main content
+ */
+
+.main {
+	position: fixed;
+	top: 51px;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+	float: left;
+	overflow-x: auto;
+	overflow-y: scroll;
+	padding: 20px;
+}
+
 @media (min-width: 768px) {
 	.tree {
 		display: block;
-		position: fixed;
-		top: 51px;
-		bottom: 0;
-		left: 0;
-		z-index: 1000;
-		overflow-y: scroll;
+		width: 20%;
+		overflow-x: hidden;
+	}
+
+	.main {
+		left: 20%;
+		width: 80%;
 	}
 }
 
@@ -111,6 +137,15 @@ body {
 	margin: 1px 10px 0 0;
 }
 
+.tree .fav {
+	width: 10px;
+	height: 10px;
+	float: left;
+	margin: 1px 10px 0 0;
+	cursor: pointer;
+	cursor: hand;
+}
+
 .tree .favorites {
 	margin-bottom: 15px;
 }
@@ -118,26 +153,6 @@ body {
 .tree .header {
 	font-size: 150%;
 	color: #999;
-}
-
-/*
- * Main content
- */
-
-.main {
-	padding: 20px;
-}
-
-@media (min-width: 768px) {
-	.main {
-		display: block;
-		position: fixed;
-		top: 51px;
-		bottom: 0;
-		left: 0;
-		z-index: 1000;
-		overflow-y: scroll;
-	}
 }
 
 /*
@@ -199,8 +214,16 @@ table .light {
 	background: #EEE;
 }
 
+.small {
+	font-size: 80%;
+}
+
 .grey {
 	color: #999;
+}
+
+.red {
+	color: orangered;
 }
 
 .ui-view-container {
@@ -294,6 +317,10 @@ td .halflings {
 
 ul.nav .glyphicons {
 	color: white;
+}
+
+.red .halflings {
+	color: orange;
 }
 
 ul.nav > li.dropdown > a {
@@ -444,17 +471,14 @@ table.element-list .center {
 	text-align: center;
 }
 
-.min-250 {
-	min-width: 250px;
-}
-
-.min-500 {
-	min-width: 500px;
-}
-
 ul.pagination > li > span,
 ul.pagination > li > a {
 	margin-bottom: 5px;
+}
+
+.dropdown-menu > li > a:hover {
+	cursor: pointer;
+	cursor: hand;
 }
 
 .main-property input {
@@ -462,7 +486,22 @@ ul.pagination > li > a {
 	font-size: 150%;
 }
 
-.date {
+input.date {
 	display: inline;
 	width: 100px;
+}
+
+input.one {
+	display: inline;
+	width: 300px;
+}
+
+input.number {
+	display: inline;
+	width: 150px;
+}
+
+input.file {
+	width: auto;
+	margin-top: 5px;
 }

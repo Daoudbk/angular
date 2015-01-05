@@ -369,14 +369,15 @@ class ImageProperty extends BaseProperty {
 		);
 
 		foreach ($this->resizes as $resizeName => $resize) {
-			$scope['resizes'][$resizeName] = array(
+			$scope['resizes'][] = [
+				'name' => $resizeName,
 				'exists' => $this->exists($resizeName),
 				'src' => $this->src($resizeName),
 				'width' => $this->width($resizeName),
 				'height' => $this->height($resizeName),
 				'filesize' => $this->filesize_kb($resizeName, 1),
 				'filename' => $this->filename($resizeName),
-			);
+			];
 		}
 
 		return $scope;

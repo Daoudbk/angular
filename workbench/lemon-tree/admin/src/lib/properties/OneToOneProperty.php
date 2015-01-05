@@ -101,12 +101,22 @@ class OneToOneProperty extends BaseProperty {
 	{
 		$this->element = $element;
 
-		$class = $this->getRelatedClass();
+		$site = \App::make('site');
+
+		$relatedClass = $this->getRelatedClass();
+		$relatedItem = $site->getItemByName($relatedClass);
+		$mainProperty = $relatedItem->getMainProperty();
 		$id = $this->element->{$this->getName()};
 
 		try {
-			$this->value = $class && $id ? $class::find($id) : null;
+			$this->value = $relatedClass && $id
+				? $relatedClass::find($id) : null;
 		} catch (\Exception $e) {}
+
+		if ($this->value) {
+			$this->value->classId = $this->value->getClassId();
+			$this->value->value = $this->value->{$mainProperty};
+		}
 
 		return $this;
 	}
@@ -138,13 +148,8 @@ class OneToOneProperty extends BaseProperty {
 	{
 		$site = \App::make('site');
 
-		$relatedClass = $this->getRelatedClass();
-		$relatedItem = $site->getItemByName($relatedClass);
-		$mainProperty = $relatedItem->getMainProperty();
-
 		$scope = array(
 			'value' => $this->getValue(),
-			'mainProperty' => $mainProperty,
 		);
 
 		try {
@@ -157,12 +162,7 @@ class OneToOneProperty extends BaseProperty {
 
 	public function getEditView()
 	{
-		$site = \App::make('site');
-
 		$relatedClass = $this->getRelatedClass();
-		$relatedItem = $site->getItemByName($relatedClass);
-		$mainProperty = $relatedItem->getMainProperty();
-		$url = \URL::route('admin.hint', $relatedClass);
 
 		$scope = array(
 			'name' => $this->getName(),
@@ -170,15 +170,8 @@ class OneToOneProperty extends BaseProperty {
 			'value' => $this->getValue(),
 			'readonly' => $this->getReadonly(),
 			'required' => $this->getRequired(),
-			'mainProperty' => $mainProperty,
 			'relatedClass' => $relatedClass,
-			'url' => $url,
 		);
-
-		if ($this->getBinds()) {
-			$treeView = \App::make('LemonTree\TreeController')->show1($this);
-			$scope['treeView'] = $treeView ? $treeView : '';
-		}
 
 		return $scope;
 	}

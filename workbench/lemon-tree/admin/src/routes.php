@@ -1,55 +1,64 @@
 <?php
 
+define('test', true);
+
 Route::filter('admin.auth', function() {
 
-	if ( ! function_exists('apache_request_headers')) {
-		function apache_request_headers() {
-			$arh = array();
-			$rx_http = '/\AHTTP_/';
-			foreach ($_SERVER as $key => $val) {
-				if (preg_match($rx_http, $key)) {
-					$arh_key = preg_replace($rx_http, '', $key);
-					$rx_matches = array();
-					$rx_matches = explode('_', $arh_key);
-					if (sizeof($rx_matches) > 0 and strlen($arh_key) > 2) {
-						foreach ($rx_matches as $ak_key => $ak_val) {
-							$rx_matches[$ak_key] = ucfirst($ak_val);
+	if (defined('test') && test === true) {
+
+		$userId = 1;
+
+	} else {
+		if ( ! function_exists('apache_request_headers')) {
+			function apache_request_headers() {
+				$arh = array();
+				$rx_http = '/\AHTTP_/';
+				foreach ($_SERVER as $key => $val) {
+					if (preg_match($rx_http, $key)) {
+						$arh_key = preg_replace($rx_http, '', $key);
+						$rx_matches = array();
+						$rx_matches = explode('_', $arh_key);
+						if (sizeof($rx_matches) > 0 and strlen($arh_key) > 2) {
+							foreach ($rx_matches as $ak_key => $ak_val) {
+								$rx_matches[$ak_key] = ucfirst($ak_val);
+							}
+							$arh_key = implode('-', $rx_matches);
 						}
-						$arh_key = implode('-', $rx_matches);
+						$arh[$arh_key] = $val;
 					}
-					$arh[$arh_key] = $val;
 				}
+				return( $arh );
 			}
-			return( $arh );
 		}
-	}
 
-	$requestHeaders = apache_request_headers();
+		$requestHeaders = apache_request_headers();
 
-	$authorizationHeader = isset($requestHeaders['Authorization'])
-		? $requestHeaders['Authorization'] : null;
+		$authorizationHeader = isset($requestHeaders['Authorization'])
+			? $requestHeaders['Authorization'] : null;
 
-	if ( ! $authorizationHeader) {
-		$scope['message'] = "Заголовок авторизации не получен.";
-		return Response::json($scope, 401);
-	}
+		if ( ! $authorizationHeader) {
+			$scope['message'] = "Заголовок авторизации не получен.";
+			return Response::json($scope, 401);
+		}
 
-	$token = str_replace('Bearer ', '', $authorizationHeader);
-	$secret = Config::get('app.key');
-	$decoded_token = null;
+		$token = str_replace('Bearer ', '', $authorizationHeader);
+		$secret = Config::get('app.key');
+		$decoded_token = null;
 
-	try {
-		$decoded = JWT::decode($token, $secret);
-	} catch(UnexpectedValueException $ex) {
-		$scope['message'] = "Недействительный токен.";
-		return Response::json($scope, 401);
-	}
+		try {
+			$decoded = JWT::decode($token, $secret);
+		} catch(UnexpectedValueException $ex) {
+			$scope['message'] = "Недействительный токен.";
+			return Response::json($scope, 401);
+		}
 
-	$userId = $decoded->user;
+		$userId = $decoded->user;
 
-	if ( ! $userId) {
-		$scope['message'] = "Недействительный токен.";
-		return Response::json($scope, 401);
+		if ( ! $userId) {
+			$scope['message'] = "Недействительный токен.";
+			return Response::json($scope, 401);
+		}
+
 	}
 
 	try {
@@ -82,7 +91,7 @@ Route::group(array(
 
 	Route::get('user', 'LemonTree\LoginController@getUser');
 
-	Route::post('profile/save', 'LemonTree\ProfileController@postSave');
+	Route::post('profile', 'LemonTree\ProfileController@postSave');
 
 	Route::post('group/add', 'LemonTree\GroupController@save');
 
@@ -133,7 +142,13 @@ Route::group(array(
 
 	Route::get('browse', 'LemonTree\BrowseController@getIndex');
 
+	Route::get('favorites', 'LemonTree\FavoritesController@getList');
+
+	Route::post('favorites/{classId}', 'LemonTree\FavoritesController@postToggle');
+
 	Route::get('tree', 'LemonTree\TreeController@show');
+
+	Route::get('hint/{class}', 'LemonTree\HintController@getHint');
 
 	Route::get('element/{classId}', 'LemonTree\EditController@getElement');
 
