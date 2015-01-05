@@ -10,7 +10,6 @@
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons-halflings.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons-bootstrap.css')?>">
-<link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/perfect-scrollbar.min.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/default.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/login.css')?>">
 <script src="<?=asset('packages/lemon-tree/admin/js/jquery.min.js')?>"></script>
@@ -21,9 +20,6 @@
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-animate.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-ui-router.min.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/ui-bootstrap.min.js')?>"></script>
-<script src="<?=asset('packages/lemon-tree/admin/js/perfect-scrollbar.min.js')?>"></script>
-<script src="<?=asset('packages/lemon-tree/admin/js/perfect-scrollbar.with-mousewheel.min.js')?>"></script>
-<script src="<?=asset('packages/lemon-tree/admin/js/angular-perfect-scrollbar.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-strap.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-strap.tpl.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/tinymce/tinymce.min.js')?>"></script>

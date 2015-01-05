@@ -1,7 +1,6 @@
 var app = angular.module('adminApp', [
 	'ngAnimate',
 	'ui.router', 'ui.bootstrap',
-	'perfect_scrollbar',
 	'mgcrea.ngStrap.datepicker', 'mgcrea.ngStrap.timepicker',
 	'ModalCtrl', 'LoginCtrl', 'NavbarCtrl', 'BrowseCtrl', 'UsersCtrl'
 ]);

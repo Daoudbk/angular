@@ -4,17 +4,20 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-	overflow-y: scroll;
+	overflow-x: hidden;
+	overflow-y: hidden;
 	padding-top: 50px;
 }
 
-/*
- * Global add-ons
- */
+.main::-webkit-scrollbar,
+.tree::-webkit-scrollbar {
+	width: 10px;
+	background-color: rgba(127,127,127,0.2);
+}
 
-.sub-header {
-	padding-bottom: 10px;
-	border-bottom: 1px solid #eee;
+.main::-webkit-scrollbar-thumb,
+.tree::-webkit-scrollbar-thumb {
+	background-color: rgba(127,127,127,0.5);
 }
 
 /*
@@ -43,6 +46,7 @@ body {
 	font-size: 14px;
 	white-space: nowrap;
 }
+
 @media (min-width: 768px) {
 	.tree {
 		display: block;
@@ -51,8 +55,7 @@ body {
 		bottom: 0;
 		left: 0;
 		z-index: 1000;
-		overflow-x: hidden;
-		overflow-y: hidden;
+		overflow-y: scroll;
 	}
 }
 
@@ -121,15 +124,21 @@ body {
  * Main content
  */
 
-@media (min-width: 768px) {
-	.main {
-		padding: 20px;
-	}
-}
-.main .page-header {
-	margin-top: 0;
+.main {
+	padding: 20px;
 }
 
+@media (min-width: 768px) {
+	.main {
+		display: block;
+		position: fixed;
+		top: 51px;
+		bottom: 0;
+		left: 0;
+		z-index: 1000;
+		overflow-y: scroll;
+	}
+}
 
 /*
  * Placeholder dashboard ideas
