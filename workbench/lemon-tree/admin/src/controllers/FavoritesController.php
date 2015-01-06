@@ -18,14 +18,28 @@ class FavoritesController extends \BaseController {
 
 		if ($favorite) {
 			$favorite->delete();
+			$scope['result'] = 'remove';
 		} else {
 			$favorite = new Favorite;
 			$favorite->class_id = $classId;
 			$favorite->user_id = $loggedUser->id;
 			$favorite->save();
+			$scope['result'] = 'add';
 		}
 
-		return $this->getList();
+		$element = $favorite->getElement();
+		$item = $element->getItem();
+		$mainProperty = $item->getMainProperty();
+
+		$favorite = [
+			'id' => $favorite->id,
+			'classId' => $element->getClassId(),
+			'name' => $element->{$mainProperty},
+		];
+
+		$scope['favorite'] = $favorite;
+
+		return \Response::json($scope);
 	}
 
 	public function getList()

@@ -38,13 +38,10 @@
 		</div>
 		<div class="tree">
 			<div ng-controller="FavoritesController">
-				<div ng-if="favoriteList.length" class="header"><span>Избранное</span></div>
-				<div ng-if="favoriteList.length" class="favorites">
-					<div ng-repeat="favorite in favoriteList" class="margin">
-						<div>
-							<favorite class-id="favorite.classId"></favorite>
-							<a ui-sref="base.browseElement({classId: favorite.classId})">{{favorite.name}}</a>
-						</div>
+				<div class="animate-repeat favorites">
+					<div ng-repeat="favorite in favoriteList" class="animate-repeat margin">
+						<favorite class-id="favorite.classId"></favorite>
+						<a ui-sref="base.browseElement({classId: favorite.classId})">{{favorite.name}}</a>
 					</div>
 				</div>
 			</div>

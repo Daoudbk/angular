@@ -24,18 +24,20 @@ app.run(function(
 				}
 			);
 			if (toState.name == 'simple.login') {
+				Favorite.getList();
 				event.preventDefault();
 				$state.go('base.browse');
 			}
 		} else {
 			if (toState.name != 'simple.login') {
+				Favorite.clear();
 				event.preventDefault();
 				$state.go('simple.login');
 			}
 		}
-
-		Favorite.getList();
 	});
+
+	Favorite.getList();
 
 	$document
 		.on('keypress', function(event){
@@ -501,7 +503,12 @@ app.factory('Favorite', function ($rootScope, $http) {
 	$rootScope.favoriteList = [];
 
 	return {
+		clear: function() {
+			$rootScope.favoriteList = [];
+		},
 		getList: function() {
+			$rootScope.favoriteList = [];
+			
 			$http({
 				method: 'GET',
 				url: 'api/favorites'
@@ -531,7 +538,19 @@ app.factory('Favorite', function ($rootScope, $http) {
 				url: 'api/favorites/'+classId
 			}).then(
 				function(response) {
-					$rootScope.favoriteList = response.data.favoriteList;
+					var result = response.data.result;
+					var favorite = response.data.favorite;
+
+					if (result === 'add') {
+						$rootScope.favoriteList.push(favorite);
+					} else {
+						for (var i in $rootScope.favoriteList) {
+							var classId = $rootScope.favoriteList[i].classId;
+							if (classId === favorite.classId) {
+								$rootScope.favoriteList.splice(i, 1);
+							}
+						}
+					}
 				},
 				function(error) {
 					console.log(error);
@@ -757,7 +776,7 @@ modal.controller('ModalInstanceController', function(
 
 login.controller('LoginController', function(
 	$rootScope, $scope, $state,
-	Login, AuthToken
+	Login, AuthToken, Favorite
 ) {
 	$scope.message = null;
 
@@ -767,6 +786,7 @@ login.controller('LoginController', function(
 			function(response) {
 				AuthToken.setToken(response.data.token);
 				$rootScope.loggedUser = response.data.user;
+				Favorite.getList();
 				$state.go('base.browse');
 			},
 			function(error) {

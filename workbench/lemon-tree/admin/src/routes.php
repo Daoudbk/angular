@@ -1,6 +1,6 @@
 <?php
 
-define('test', true);
+define('test', false);
 
 Route::filter('admin.auth', function() {
 

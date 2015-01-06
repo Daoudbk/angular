@@ -101,7 +101,7 @@ body {
 }
 
 .tree .item {
-	margin: 10px 0 5px 0;
+	margin: 10px 0 0 0;
 	font-size: 11px;
 	font-weight: bold;
 	color: #e8a700;
@@ -137,17 +137,9 @@ body {
 	margin: 1px 10px 0 0;
 }
 
-.tree .fav {
-	width: 10px;
-	height: 10px;
-	float: left;
-	margin: 1px 10px 0 0;
-	cursor: pointer;
-	cursor: hand;
-}
-
 .tree .favorites {
 	margin-bottom: 15px;
+	padding-top: 5px;
 }
 
 .tree .header {
@@ -224,6 +216,27 @@ table .light {
 
 .red {
 	color: orangered;
+}
+
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave {
+  -webkit-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+}
+
+.animate-repeat.ng-leave.ng-leave-active,
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter {
+  opacity:0;
+  max-height:0;
+}
+
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move.ng-move-active,
+.animate-repeat.ng-enter.ng-enter-active {
+  opacity:1;
+  max-height:40px;
 }
 
 .ui-view-container {
