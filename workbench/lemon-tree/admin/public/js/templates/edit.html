@@ -5,7 +5,7 @@
 		<li ng-show="currentElement" class="active"><a ui-sref="base.browseElement({classId: currentElement.classId})">{{currentElement.mainProperty}}</a></li>
 	</ul>
 	<p class="controls">
-		<button type="button" class="btn btn-default"><span class="halflings halflings-triangle-top"></span> Наверх</button>
+		<button ng-click="up()" type="button" class="btn btn-default"><span class="halflings halflings-triangle-top"></span> Наверх</button>
 		<button type="button" class="btn btn-default disabled"><span class="halflings halflings-pencil"></span> Редактировать</button>
 		<button type="button" class="btn btn-default" ng-click="submit()"><span class="halflings halflings-floppy-disk"></span> Сохранить</button>
 		<button type="button" class="btn btn-default"><span class="halflings halflings-duplicate"></span> Копировать</button>

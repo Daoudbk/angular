@@ -41,7 +41,7 @@
 				<div class="animate-repeat favorites">
 					<div ng-repeat="favorite in favoriteList" class="animate-repeat margin">
 						<favorite class-id="favorite.classId"></favorite>
-						<a ui-sref="base.browseElement({classId: favorite.classId})">{{favorite.name}}</a>
+						<a ui-sref="base.browseElement({classId: favorite.classId})" context-menu="menuOptions">{{favorite.name}}</a>
 					</div>
 				</div>
 			</div>

@@ -1,1 +1,2 @@
-{{value}}
+<a ng-show="view.isMainProperty === true" ui-sref="base.editElement({classId: view.classId})"><span class="halflings halflings-pencil"></span></a> <a ui-sref="base.editElement({classId: view.classId})">{{view.value}}</a>
+<span ng-show=" ! view.isMainProperty">{{view.value}}</span>

@@ -215,18 +215,18 @@ abstract class BaseProperty {
 
 	public function drop() {}
 
-	public function getElementListView()
+	public function getListView()
 	{
+		$element = $this->getElement();
+		$classId = $element ? $element->getClassId() : null;
+
 		$scope = array(
 			'value' => $this->getValue(),
+			'isMainProperty' => $this->isMainProperty(),
+			'classId' => $classId,
 		);
 
-		try {
-			$view = $this->getClassName().'.elementList';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
 
 	public function getEditView()

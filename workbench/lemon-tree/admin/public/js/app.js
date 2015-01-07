@@ -9,7 +9,7 @@ var app = angular.module('adminApp', [
 
 app.run(function(
 	$rootScope, $state, $document, $window,
-	AuthToken, Login, Alert, Favorite
+	AuthToken, Login, Alert, Favorite, helper
 ){
 	$rootScope.$on('$stateChangeStart', function(
 		event, toState, toParams, fromState, fromParams
@@ -47,7 +47,30 @@ app.run(function(
 			return Alert.handleKeys(event);
 		});
 
-	$rootScope.toDate = function(datetime) {
+	$rootScope.helper = helper;
+});
+
+app.constant('helper', {
+	templatePath: function(name) {
+		return 'packages/lemon-tree/admin/js/templates/'+name+'.html';
+	},
+	selectCaseForNumber: function(number, cases) {
+		if (
+			(number % 10) == 1
+			&& (number % 100) != 11
+		) {
+			return cases[0];
+		} else if (
+			(number % 10) > 1
+			&& (number % 10) < 5
+			&& (number % 100 < 10 || number % 100 > 20)
+		) {
+			return cases[1];
+		}
+
+		return cases[2];
+	},
+	toDate: function(datetime) {
 		if ( ! datetime) return null;
 
 		var parts = datetime.split(' ');
@@ -60,9 +83,8 @@ app.run(function(
 		);
 
 		return date;
-	};
-
-	$rootScope.toDateString = function(date) {
+	},
+	toDateString: function(date) {
 		if ( ! date) return null;
 
 		var dateString =
@@ -71,12 +93,6 @@ app.run(function(
 			+'-'+('0' + date.getDate()).slice(-2);
 
 		return dateString;
-	};
-});
-
-app.constant('helper', {
-	templatePath: function(name) {
-		return 'packages/lemon-tree/admin/js/templates/'+name+'.html';
 	}
 });
 
@@ -151,6 +167,11 @@ app.config([
 		})
 		.state('base.editElement', {
 			url: '/edit/{classId:[A-Za-z\.0-9]+}',
+			templateUrl: templatePath('edit'),
+			controller: 'EditController'
+		})
+		.state('base.addElement', {
+			url: '/add/{class:[A-Za-z\0-9]+}',
 			templateUrl: templatePath('edit'),
 			controller: 'EditController'
 		})
@@ -360,7 +381,7 @@ app.directive('ctrlRight', function() {
 });
 
 app.directive('tree', function(
-	$http, $window, helper
+	$http, $window, $state, helper, Favorite
 ) {
     return {
 		restrict: 'E',
@@ -398,6 +419,26 @@ app.directive('tree', function(
 				scope.treeView[classId] = false;
 				$('.padding[node="'+classId+'"]').slideUp('fast');
 			};
+
+			scope.menuOptions = [
+				['Редактировать', function ($itemScope) {
+					$state.go('base.editElement', {classId: $itemScope.element.classId});
+				}],
+				['Открыть', function ($itemScope) {
+					$state.go('base.browseElement', {classId: $itemScope.element.classId});
+				}],
+				null,
+				['Переместить', function ($itemScope) {
+
+				}],
+				['Удалить', function ($itemScope) {
+
+				}],
+				null,
+				['Избранное', function ($itemScope) {
+					Favorite.toggle($itemScope.element.classId);
+				}],
+			];
 
 			if ( ! node) {
 				$http({
@@ -460,7 +501,7 @@ app.directive('property', function ($http, helper) {
 		},
 		template: '<ng-include src="getTemplateUrl()"></ng-include>',
 		link: function(scope, element, attrs) {
-			scope.selected = null;
+			scope.helper = helper;
 
 			scope.getTemplateUrl = function() {
 				return helper.templatePath(
@@ -499,6 +540,82 @@ app.directive('favorite', function (Favorite, helper) {
 	};
 });
 
+app.directive('contextMenu', function ($parse) {
+	var renderContextMenu = function ($scope, event, options) {
+		if (!$) { var $ = angular.element; }
+		$(event.currentTarget).addClass('context');
+		var $contextMenu = $('<div>');
+		$contextMenu.addClass('dropdown clearfix');
+		var $ul = $('<ul>');
+		$ul.addClass('dropdown-menu');
+		$ul.attr({ 'role': 'menu' });
+		$ul.css({
+			display: 'block',
+			position: 'absolute',
+			left: event.pageX + 'px',
+			top: event.pageY + 'px'
+		});
+		angular.forEach(options, function (item, i) {
+			var $li = $('<li>');
+			if (item === null) {
+				$li.addClass('divider');
+			} else {
+				$a = $('<a>');
+				$a.attr({ tabindex: '-1', href: '#' });
+				$a.text(typeof item[0] == 'string' ? item[0] : item[0].call($scope, $scope));
+				$li.append($a);
+				$li.on('click', function ($event) {
+					$event.preventDefault();
+					$scope.$apply(function () {
+						$(event.currentTarget).removeClass('context');
+						$contextMenu.remove();
+						item[1].call($scope, $scope);
+					});
+				});
+			}
+			$ul.append($li);
+		});
+		$contextMenu.append($ul);
+		var height = Math.max(
+			document.body.scrollHeight, document.documentElement.scrollHeight,
+			document.body.offsetHeight, document.documentElement.offsetHeight,
+			document.body.clientHeight, document.documentElement.clientHeight
+		);
+		$contextMenu.css({
+			width: '100%',
+			height: height + 'px',
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			zIndex: 9999
+		});
+		$(document).find('body').append($contextMenu);
+		$contextMenu.on("mousedown", function (e) {
+			if ($(e.target).hasClass('dropdown')) {
+				$(event.currentTarget).removeClass('context');
+				$contextMenu.remove();
+			}
+		}).on('contextmenu', function (event) {
+			$(event.currentTarget).removeClass('context');
+			event.preventDefault();
+			$contextMenu.remove();
+		});
+	};
+	return function ($scope, element, attrs) {
+		element.on('contextmenu', function (event) {
+			$scope.$apply(function () {
+				event.preventDefault();
+				var options = $scope.$eval(attrs.contextMenu);
+				if (options instanceof Array) {
+					renderContextMenu($scope, event, options);
+				} else {
+					throw '"' + attrs.contextMenu + '" not an array';
+				}
+			});
+		});
+	};
+});
+
 app.factory('Favorite', function ($rootScope, $http) {
 	$rootScope.favoriteList = [];
 
@@ -508,7 +625,7 @@ app.factory('Favorite', function ($rootScope, $http) {
 		},
 		getList: function() {
 			$rootScope.favoriteList = [];
-			
+
 			$http({
 				method: 'GET',
 				url: 'api/favorites'
@@ -841,26 +958,44 @@ navbar.controller('NavbarController', function(
 var favorites = angular.module('FavoritesCtrl', []);
 
 favorites.controller('FavoritesController', function(
-	$scope, Favorite
+	$scope, $state, Favorite
 ) {
+	$scope.menuOptions = [
+		['Редактировать', function ($itemScope) {
+			$state.go('base.editElement', {classId: $itemScope.favorite.classId});
+		}],
+		['Открыть', function ($itemScope) {
+			$state.go('base.browseElement', {classId: $itemScope.favorite.classId});
+		}],
+		null,
+		['Переместить', function ($itemScope) {
 
+		}],
+		['Удалить', function ($itemScope) {
 
-	$scope.toggleFavorite = function(classId) {
-		return Favorite.toggleFavorite(classId);
-	}
+		}],
+		null,
+		['Избранное', function ($itemScope) {
+			Favorite.toggle($itemScope.favorite.classId);
+		}],
+	];
 });
 
 var browse = angular.module('BrowseCtrl', []);
 
 browse.controller('BrowseController', function(
-	$rootScope, $scope, $http, $stateParams
+	$rootScope, $scope, $http, $state, $stateParams
 ) {
 	var classId = $stateParams.classId;
 
 	$rootScope.activeIcon = 'browse';
 
 	$scope.currentElement = null;
-	$scope.categoryList = [];
+	$scope.parentElement = null;
+	$scope.parentList = [];
+	$scope.bindItemList = [];
+	$scope.elementListViewList = [];
+	$scope.empty = false;
 
 	if (classId) {
 		$http({
@@ -869,6 +1004,8 @@ browse.controller('BrowseController', function(
 		}).then(
 			function(response) {
 				$scope.currentElement = response.data.currentElement;
+				$scope.parentElement = response.data.parentElement;
+				$scope.parentList = response.data.parentList;
 			},
 			function(error) {
 				console.log(error);
@@ -878,26 +1015,53 @@ browse.controller('BrowseController', function(
 
 	$http({
 		method: 'GET',
-		url: 'api/browse'
+		url: (classId ? 'api/binds/'+classId : 'api/binds')
 	}).then(
 		function(response) {
-			$scope.categoryList = response.data.categoryList;
+			$scope.bindItemList = response.data.bindItemList;
 		},
 		function(error) {
 			console.log(error);
 		}
 	);
+
+	$http({
+		method: 'GET',
+		url: (classId ? 'api/browse/'+classId : 'api/browse')
+	}).then(
+		function(response) {
+			$scope.elementListViewList = response.data.elementListViewList;
+			$scope.empty = $scope.elementListViewList.length ? false : true;
+		},
+		function(error) {
+			console.log(error);
+		}
+	);
+
+	$scope.up = function() {
+		if ($scope.parentElement) {
+			$state.go('base.browseElement', {classId: $scope.parentElement.classId});
+		} else if ($scope.currentElement) {
+			$state.go('base.browse');
+		}
+	};
+
+	$scope.edit = function() {
+		if ($scope.currentElement) {
+			$state.go('base.editElement', {classId: $scope.currentElement.classId});
+		}
+	};
 });
 
 browse.controller('EditController', function(
-	$rootScope, $scope, $http, $stateParams,
-	Favorite
+	$rootScope, $scope, $http, $state, $stateParams
 ) {
 	var classId = $stateParams.classId;
 
 	$rootScope.activeIcon = 'edit';
 
 	$scope.currentElement = null;
+	$scope.parentElement = null;
 	$scope.parentList = [];
 	$scope.currentItem = null;
 	$scope.propertyList = [];
@@ -908,6 +1072,7 @@ browse.controller('EditController', function(
 	}).then(
 		function(response) {
 			$scope.currentElement = response.data.currentElement;
+			$scope.parentElement = response.data.parentElement;
 			$scope.parentList = response.data.parentList;
 			$scope.currentItem = response.data.currentItem;
 			$scope.propertyList = response.data.propertyList;
@@ -917,13 +1082,13 @@ browse.controller('EditController', function(
 		}
 	);
 
-	$scope.isFavorite = function() {
-		return Favorite.isFavorite(classId);
-	}
-
-	$scope.toggleFavorite = function() {
-		return Favorite.toggleFavorite(classId);
-	}
+	$scope.up = function() {
+		if ($scope.parentElement) {
+			$state.go('base.browseElement', {classId: $scope.parentElement.classId});
+		} else {
+			$state.go('base.browse');
+		}
+	};
 
 	$scope.submit = function() {
 		console.log($scope);

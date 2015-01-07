@@ -2,7 +2,7 @@
 
 class Item {
 
-	protected $properties = array();
+	public $properties = array();
 
 	protected $name = null;
 	protected $title = null;

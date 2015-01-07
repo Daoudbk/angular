@@ -43,7 +43,6 @@ body {
 	top: 51px;
 	bottom: 0;
 	left: 0;
-	z-index: 1000;
 	float: left;
 	overflow-x: auto;
 	overflow-y: scroll;
@@ -65,7 +64,6 @@ body {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	z-index: 1000;
 	float: left;
 	overflow-x: auto;
 	overflow-y: scroll;
@@ -188,6 +186,16 @@ h2 > b,
 h3 > b {
 	font-weight: normal;
 	color: #666;
+}
+
+p {
+	padding: 5px 0;
+}
+
+span.h2 {
+	font-size: 150%;
+	font-weight: normal;
+	color: #999;
 }
 
 .dnone {
@@ -367,13 +375,25 @@ ul.nav > li.dropdown > a {
 	padding: 10px 10px;
 }
 
-.element-list-header td {
-	padding: 0 0 3px 0;
+table.element-list-header {
+	margin: 0;
+	padding: 0;
+}
+
+table.element-list-header tr {
+	margin: 0;
+	padding: 0;
+	vertical-align: middle;
+}
+
+table.element-list-header td {
+	margin: 0;
+	padding: 0;
 	border-collapse: collapse;
 }
 
 .order-link {
-	padding: 6px 0 0 25px;
+	padding: 5px 0 0 25px;
 	font-size: 13px;
 }
 
@@ -400,6 +420,7 @@ table.element-list {
 	border-collapse: collapse;
 	width: 100%;
 	margin: 5px 0px 20px 0px;
+	padding: 0;
 }
 
 table.element-list th {

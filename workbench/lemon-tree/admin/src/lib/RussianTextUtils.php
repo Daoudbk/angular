@@ -72,18 +72,17 @@ class RussianTextUtils {
 	**/
 	public static function selectCaseForNumber($number, $cases)
 	{
-		if (($number % 10) == 1 && ($number % 100) != 11) {
-
+		if (
+			($number % 10) == 1
+			&& ($number % 100) != 11
+		) {
 			return $cases[0];
-
 		} elseif (
 			($number % 10) > 1
 			&& ($number % 10) < 5
 			&& ($number % 100 < 10 || $number % 100 > 20)
 		) {
-
 			return $cases[1];
-
 		} else {
 			return $cases[2];
 		}

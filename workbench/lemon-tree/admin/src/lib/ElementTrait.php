@@ -357,6 +357,7 @@ trait ElementTrait {
 
 	public function getParentList()
 	{
+		$parents = array();
 		$parentList = array();
 		$exists = array();
 
@@ -365,13 +366,17 @@ trait ElementTrait {
 
 		while ($count < 100 && $parent instanceof ElementInterface) {
 			if (isset($exists[$parent->getClassId()])) break;
-			$parentList[] = $parent;
+			$parents[] = $parent;
 			$exists[$parent->getClassId()] = $parent->getClassId();
 			$parent = $parent->getParent();
 			$count++;
 		}
 
-		krsort($parentList);
+		krsort($parents);
+
+		foreach ($parents as $parent) {
+			$parentList[] = $parent;
+		}
 
 		return $parentList;
 	}

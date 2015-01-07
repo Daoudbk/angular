@@ -140,7 +140,9 @@ Route::group(array(
 	Route::get('group/{id}/user/list', 'LemonTree\UserController@getListByGroup')->
 		where('id', '[0-9]+');
 
-	Route::get('browse', 'LemonTree\BrowseController@getIndex');
+	Route::get('browse/{classId?}', 'LemonTree\BrowseController@getIndex');
+
+	Route::get('binds/{classId?}', 'LemonTree\BrowseController@getBinds');
 
 	Route::get('favorites', 'LemonTree\FavoritesController@getList');
 

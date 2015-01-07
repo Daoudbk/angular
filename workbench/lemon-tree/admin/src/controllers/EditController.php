@@ -34,6 +34,11 @@ class EditController extends \BaseController {
 		$currentElement->mainProperty = $currentElement->$mainProperty;
 
 		$parentElement = $currentElement->getParent();
+
+		if ($parentElement) {
+			$parentElement->classId = $parentElement->getClassId();
+		}
+
 		$parentList = $currentElement->getParentList();
 
 		foreach ($parentList as $parent) {
