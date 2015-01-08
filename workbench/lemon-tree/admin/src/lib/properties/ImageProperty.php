@@ -335,19 +335,16 @@ class ImageProperty extends BaseProperty {
 		}
 	}
 
-	public function getElementListView()
+	public function getListView()
 	{
 		$scope = array(
+			'exists' => $this->exists(),
 			'src' => $this->src(),
-			'value' => $this->getValue(),
+			'width' => $this->width(),
+			'height' => $this->height(),
 		);
 
-		try {
-			$view = $this->getClassName().'.elementList';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
 
 	public function getEditView()

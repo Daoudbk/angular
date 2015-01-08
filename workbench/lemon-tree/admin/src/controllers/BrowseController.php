@@ -165,6 +165,7 @@ class BrowseController extends \BaseController {
 			if (
 				! $property->getShow()
 				|| $property->getHidden()
+				|| $property->getName() === 'deleted_at'
 			) continue;
 
 			$itemPropertyList[] = [
@@ -340,6 +341,7 @@ class BrowseController extends \BaseController {
 				if (
 					! $property->getShow()
 					|| $property->getHidden()
+					|| $property->getName() === 'deleted_at'
 				) continue;
 
 				$property->setElement($element);

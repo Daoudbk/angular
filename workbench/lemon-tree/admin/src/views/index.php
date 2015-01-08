@@ -11,7 +11,6 @@
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons-halflings.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/glyphicons-bootstrap.css')?>">
 <link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/default.css')?>">
-<link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/css/login.css')?>">
 <script src="<?=asset('packages/lemon-tree/admin/js/jquery.min.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/jquery.blockUI.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/bootstrap.min.js')?>"></script>
@@ -24,6 +23,63 @@
 <script src="<?=asset('packages/lemon-tree/admin/js/angular-strap.tpl.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/tinymce/tinymce.min.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/app.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/helper/helper.js')?>"></script>
+
+<link media="all" type="text/css" rel="stylesheet" href="<?=asset('packages/lemon-tree/admin/js/components/login/login.css')?>">
+<script src="<?=asset('packages/lemon-tree/admin/js/components/login/login.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/login/login-service.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/login/login-controller.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/users.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/users-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/group-users-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/group-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/element-permissions-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/item-permissions-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/user-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/log-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/users/profile-controller.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/favorites/favorites.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/favorites/favorites-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/favorites/favorite-directive.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/favorites/favorite-service.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/ui-tinymce/ui-tinymce.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/ui-tinymce/ui-tinymce-directive.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/properties/property.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/properties/property-directive.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/browse/browse.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/browse/browse-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/browse/edit-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/browse/search-controller.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/browse/trash-controller.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/navbar/navbar.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/navbar/navbar-controller.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/tree/tree.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/tree/tree-directive.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/tree/subtree-directive.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/modal/modal.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/modal/modal-instance-controller.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/context-menu/context-menu.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/context-menu/context-menu-directive.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/alert/alert.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/alert/alert-service.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/auth/auth.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/auth/auth-token-service.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/auth/auth-interceptor.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/form/form.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/form/form-interceptor.js')?>"></script>
 </head>
 <body ng-app="adminApp" ui-view>
 </body>

@@ -189,11 +189,13 @@ class FileProperty extends BaseProperty {
 		}
 	}
 
-	public function getElementListView()
+	public function getListView()
 	{
 		$scope = array(
+			'exists' => $this->exists(),
 			'path' => $this->path(),
-			'value' => $this->getValue(),
+			'filename' => $this->filename(),
+			'filesize' => $this->filesize_kb(1),
 		);
 
 		try {

@@ -59,7 +59,7 @@ body {
  */
 
 .main {
-	position: fixed;
+	position: absolute;
 	top: 51px;
 	bottom: 0;
 	left: 0;
@@ -183,7 +183,8 @@ h1, h2, h3 {
 
 h1 > b,
 h2 > b,
-h3 > b {
+h3 > b,
+span.h2 b {
 	font-weight: normal;
 	color: #666;
 }
@@ -287,10 +288,6 @@ table .light {
 
 .page-animate.ng-leave-active {
 	opacity: 0;
-}
-
-.modal-open {
-	overflow-y: scroll;
 }
 
 .halflings,

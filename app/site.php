@@ -325,6 +325,7 @@ $site->
 			setTitle('Бренд товара')->
 			setRelatedClass('GoodBrand')->
 			setDeleting(OneToOneProperty::RESTRICT)->
+			setShow(true)->
 			setRequired(true)
 		)->
 		addTimestamps()->
