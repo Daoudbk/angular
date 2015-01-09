@@ -1,8 +1,8 @@
 var app = angular.module('adminApp', [
 	'ngAnimate',
 	'ui.router', 'ui.bootstrap',
-	'mgcrea.ngStrap.datepicker', 'mgcrea.ngStrap.timepicker',
 	'mgcrea.ngStrap.typeahead',
+	'mgcrea.ngStrap.datepicker', 'mgcrea.ngStrap.timepicker',
 	'HelperCtrl', 'uiTinymceCtrl',
 	'ModalCtrl', 'PropertyCtrl', 'ContextMenuCtrl',
 	'AlertCtrl', 'AuthCtrl', 'FormCtrl',

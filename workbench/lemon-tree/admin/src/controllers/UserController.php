@@ -156,14 +156,6 @@ class UserController extends \BaseController {
 			'last_name.required' => 'Поле обязательно к заполнению',
 		);
 
-		$titles = array(
-			'login' => 'Логин',
-			'email' => 'E-mail',
-			'password' => 'Пароль',
-			'first_name' => 'Имя',
-			'last_name' => 'Фамилия',
-		);
-
 		$groups = \Input::get('groups') ?: [];
 
 		if (is_array($groups)) {
@@ -172,7 +164,6 @@ class UserController extends \BaseController {
 					$input['group_'.$id] = $id;
 					$rules['group_'.$id] = 'exists:cytrus_groups,id';
 					$messages['group_'.$id.'.exists'] = 'Некорректный идентификатор';
-					$titles['group_'.$id] = 'Группа '.$id;
 				}
 			}
 		}
@@ -184,10 +175,7 @@ class UserController extends \BaseController {
 			$errors = array();
 			foreach ($messages as $field => $messageList) {
 				foreach ($messageList as $message) {
-					$errors[$field][] = array(
-						'title' => $titles[$field],
-						'message' => $message,
-					);
+					$errors[$field][] = $message;
 				}
 			}
 			$scope['error'] = $errors;

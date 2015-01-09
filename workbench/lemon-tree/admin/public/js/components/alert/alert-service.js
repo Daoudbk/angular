@@ -1,4 +1,4 @@
-alert.factory('Alert', function($rootScope) {
+alert.factory('Alert', function($rootScope, $injector) {
 	return {
 		handleKeys: function(event) {
 			var code = event.keyCode || event.which;
@@ -11,52 +11,60 @@ alert.factory('Alert', function($rootScope) {
 			return true;
 		},
 		onSubmit: function() {
-			$('[data-toggle="popover"]')
-				.attr('data-content', '')
-				.focus(function() {
-					$(this).popover('hide');
-					$(this).parent().removeClass('has-error');
-				})
-				.popover({
-					placement: 'bottom',
-					trigger: 'manual',
-				})
-				.popover('hide');
-
-			$('[data-toggle="popover"]').parent()
-				.removeClass('has-error');
-
-			$('#modal').on('hidden.bs.modal', function (e) {
-				$('[data-toggle="popover"]').popover('show');
-			});
+			$('.error').html(null).hide();
 
 			$.blockUI();
 		},
 		onResponse: function(response) {
+			var modal = $injector.get('$modal');
+
 			if (errors = response.data.error) {
-				var html = '';
+				var html = [];
 
-				for (var propertyName in errors) {
-					var propertyHtml = '';
+				$('.error').each(function() {
+					var name = $(this).attr('name');
+					var label = $(this).attr('label');
 
-					for (var i in errors[propertyName]) {
-						var title = errors[propertyName][i].title;
-						var message = errors[propertyName][i].message;
-						if (title && message) {
-							propertyHtml += message+' ';
-							html += '<strong>'+title+'.</strong> '+message+'<br />';
+					if (errors[name]) {
+						for (var i in errors[name]) {
+							var message = errors[name][i];
+
+							html.push({
+								label: label,
+								message: message
+							});
+
+							$('.error[name="'+name+'"]').html(message);
 						}
 					}
+				});
 
-					$('[id="'+propertyName+'"]').parent().addClass('has-error');
-					$('[id="'+propertyName+'"]').attr('data-content', propertyHtml);
-				}
+				if (html.length) {
+					var modalInstance = modal.open({
+						templateUrl: 'form.html',
+						controller: 'ModalInstanceController',
+						resolve: {
+							data: function() {
+								return {
+									errors: html
+								};
+							},
+						}
+					});
 
-				if (html) {
-					$('.modal-body').html(html);
-					$('#modal').modal();
+					modalInstance.result.then(
+						function() {},
+						function() {
+							$('.error').each(function() {
+								if ($(this).html()) {
+									$(this).fadeIn('fast');
+								}
+							});
+						}
+					);
 				}
 			}
+
 			$.unblockUI();
 		},
 	};

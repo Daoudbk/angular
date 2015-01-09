@@ -8,30 +8,31 @@
 		<div class="well">
 			<form role="form" ng-model="user" submit-on="CtrlS" ng-submit="submit()">
 				<div class="form-group">
-					<label for="login">Логин</label>
-					<input ng-model="user.login" type="text" id="login" class="form-control" placeholder="Введите логин" data-toggle="popover">
+					<label for="login">Логин</label><span name="login" label="Логин" class="error"></span>
+					<input ng-model="user.login" type="text" id="login" class="form-control" placeholder="Введите логин">
 				</div>
 				<div class="form-group">
-					<label for="password">Пароль</label>
+					<label for="password">Пароль</label><span name="password" label="Пароль" class="error"></span>
 					<input ng-model="user.password" type="password" id="password" class="form-control" placeholder="Введите новый пароль">
 				</div>
 				<div class="form-group">
-					<label for="email">E-mail</label>
-					<input ng-model="user.email" type="email" id="email" class="form-control" placeholder="Введите адрес электронной почты" data-toggle="popover">
+					<label for="email">E-mail</label><span name="email" label="E-mail" class="error"></span>
+					<input ng-model="user.email" type="email" id="email" class="form-control" placeholder="Введите адрес электронной почты">
 				</div>
 				<div class="form-group">
-					<label for="first_name">Имя</label>
-					<input ng-model="user.first_name" type="text" id="first_name" class="form-control" placeholder="Введите имя" data-toggle="popover">
+					<label for="first_name">Имя</label><span name="first_name" label="Имя" class="error"></span>
+					<input ng-model="user.first_name" type="text" id="first_name" class="form-control" placeholder="Введите имя">
 				</div>
 				<div class="form-group">
-					<label for="last_name">Фамилия</label>
-					<input ng-model="user.last_name" type="text" id="last_name" class="form-control" placeholder="Введите фамилию" data-toggle="popover">
+					<label for="last_name">Фамилия</label><span name="last_name" label="Фамилия" class="error"></span>
+					<input ng-model="user.last_name" type="text" id="last_name" class="form-control" placeholder="Введите фамилию">
 				</div>
 				<div class="form-group" ng-show="groupList.length">
-					<label id="groups">Состоит в группах:</label>
+					<label>Состоит в группах:</label>
 					<div class="checkbox" ng-repeat="group in groupList">
 						<label>
-							<input ng-model="user.groups[group.id]" type="checkbox" id="group_{{group.id}}" data-toggle="popover"> {{group.name}}
+							<input ng-model="user.groups[group.id]" type="checkbox"> {{group.name}}
+							<span name="group_{{group.id}}" label="{{group.name}}" class="error"></span>
 						</label>
 					</div>
 				</div>

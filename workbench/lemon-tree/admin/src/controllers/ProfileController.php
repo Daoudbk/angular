@@ -17,17 +17,10 @@ class ProfileController extends BaseController {
 		);
 
 		$messages = array(
-			'email.required' => 'Поле обязательно к заполнению.',
-			'email' => 'Некорректный адрес электронной почты.',
-			'first_name.required' => 'Поле обязательно к заполнению.',
-			'last_name.required' => 'Поле обязательно к заполнению.',
-		);
-
-		$titles = array(
-			'email' => 'E-mail',
-			'password' => 'Пароль',
-			'first_name' => 'Имя',
-			'last_name' => 'Фамилия',
+			'email.required' => 'Поле обязательно к заполнению',
+			'email' => 'Некорректный адрес электронной почты',
+			'first_name.required' => 'Поле обязательно к заполнению',
+			'last_name.required' => 'Поле обязательно к заполнению',
 		);
 
 		$validator = \Validator::make($input, $rules, $messages);
@@ -37,10 +30,7 @@ class ProfileController extends BaseController {
 			$errors = array();
 			foreach ($messages as $field => $messageList) {
 				foreach ($messageList as $message) {
-					$errors[$field][] = array(
-						'title' => $titles[$field],
-						'message' => $message,
-					);
+					$errors[$field][] = $message;
 				}
 			}
 			$scope['error'] = $errors;

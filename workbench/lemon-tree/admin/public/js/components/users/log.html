@@ -1,7 +1,7 @@
 <div ng-controller="LogController">
 	<ul class="breadcrumb">
 		<li><a ui-sref="base.users">Управление пользователями</a></li>
-		<li class="active">Журнал действий <span ng-hide="activeUser">пользователей</span><span ng-show="activeUser">пользователя {{activeUser.login}}</span></li>
+		<li class="active">Журнал действий <span ng-hide="activeUser">пользователей</span><span ng-show="activeUser">пользователя <b>{{activeUser.login}}</b></span></li>
 	</ul>
 	<div class="well">
 		<form role="form" ng-submit="submit()">

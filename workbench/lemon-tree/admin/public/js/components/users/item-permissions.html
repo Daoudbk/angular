@@ -23,7 +23,7 @@
 						</thead>
 						<tbody>
 						<tr ng-repeat="item in itemList">
-							<td><span id="{{item.name}}" data-toggle="popover">{{item.title}}</span></td>
+							<td>{{item.title}}<span name="{{item.name}}" label="{{item.title}}" class="error"></span></td>
 							<td class="text-center" ng-click="permission[item.name] = 'deny'" ng-class="permission[item.name] === 'deny' ? 'light' : ''"><input ng-model="permission[item.name]" type="radio" value="deny"></td>
 							<td class="text-center" ng-click="permission[item.name] = 'view'" ng-class="permission[item.name] === 'view' ? 'light' : ''"><input ng-model="permission[item.name]" type="radio" value="view"></td>
 							<td class="text-center" ng-click="permission[item.name] = 'update'" ng-class="permission[item.name] === 'update' ? 'light' : ''"><input ng-model="permission[item.name]" type="radio" value="update"></td>

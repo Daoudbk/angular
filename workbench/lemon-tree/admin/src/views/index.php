@@ -80,6 +80,7 @@
 
 <script src="<?=asset('packages/lemon-tree/admin/js/components/form/form.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/components/form/form-interceptor.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/form/submit-on-directive.js')?>"></script>
 </head>
 <body ng-app="adminApp" ui-view>
 </body>

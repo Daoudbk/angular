@@ -1,7 +1,7 @@
 modal.controller('ModalInstanceController', function(
 	$scope, $modalInstance, data
 ) {
-	$scope.message = data.message;
+	$scope.data = data;
 	$scope.textOk = data.textOk;
 	$scope.textCancel = data.textCancel;
 

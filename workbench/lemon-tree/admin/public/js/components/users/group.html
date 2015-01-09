@@ -8,16 +8,17 @@
 		<div class="well">
 			<form role="form" ng-model="group" submit-on="CtrlS" ng-submit="submit()">
 				<div class="form-group">
-					<label for="name">Название</label>
-					<input ng-model="group.name" type="text" id="name" class="form-control" placeholder="Введите название группы" data-toggle="popover">
+					<label for="name">Название:</label><span name="name" label="Название" class="error"></span>
+					<input ng-model="group.name" type="text" class="form-control" placeholder="Введите название группы">
 				</div>
 				<div class="form-group">
-					<label data-toggle="popover">
+					<label>
 						<input ng-model="group.admin" type="checkbox" value="1"> Управление пользователями
 					</label>
+					<span name="admin" label="Управление пользователями" class="error"></span>
 				</div>
 				<div class="form-group">
-					<label id="default_permission" data-toggle="popover">Доступ к элементам по умолчанию:</label>
+					<label>Доступ к элементам по умолчанию:</label><span name="default_permission" label="Доступ к элементам по умолчанию" class="error"></span>
 					<div class="radio">
 						<label>
 							<input ng-model="group.default_permission" type="radio" value="deny"> Доступ закрыт

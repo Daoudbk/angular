@@ -114,11 +114,6 @@ class GroupController extends \BaseController {
 			'default_permission.in' => 'Некорректное право доступа',
 		);
 
-		$titles = array(
-			'name' => 'Название',
-			'default_permission' => 'Доступ к элементам по умолчанию',
-		);
-
 		$validator = \Validator::make($input, $rules, $messages);
 
 		if ($validator->fails()) {
@@ -126,10 +121,7 @@ class GroupController extends \BaseController {
 			$errors = array();
 			foreach ($messages as $field => $messageList) {
 				foreach ($messageList as $message) {
-					$errors[$field][] = array(
-						'title' => $titles[$field],
-						'message' => $message,
-					);
+					$errors[$field][] = $message;
 				}
 			}
 			$scope['error'] = $errors;
@@ -193,7 +185,6 @@ class GroupController extends \BaseController {
 		$itemList = $site->getItemList();
 
 		foreach ($itemList as $item) {
-			$titles[$item->getName()] = $item->getTitle();
 			$rules[$item->getName()] = 'required|in:deny,view,update,delete';
 			$messages[$item->getName().'.required'] = 'Поле обязательно к заполнению';
 			$messages[$item->getName().'.in'] = 'Некорректное право доступа';
@@ -206,10 +197,7 @@ class GroupController extends \BaseController {
 			$errors = array();
 			foreach ($messages as $field => $messageList) {
 				foreach ($messageList as $message) {
-					$errors[$field][] = array(
-						'title' => $titles[$field],
-						'message' => $message,
-					);
+					$errors[$field][] = $message;
 				}
 			}
 			$scope['error'] = $errors;
@@ -325,7 +313,6 @@ class GroupController extends \BaseController {
 
 		foreach ($itemElementList as $itemName => $elementList) {
 			foreach ($elementList as $classId => $name) {
-				$titles[$classId] = $name;
 				$rules[$classId] = 'required|in:deny,view,update,delete';
 				$messages[$classId.'.required'] = 'Поле обязательно к заполнению';
 				$messages[$classId.'.in'] = 'Некорректное право доступа';
@@ -340,10 +327,7 @@ class GroupController extends \BaseController {
 			$errors = array();
 			foreach ($messages as $field => $messageList) {
 				foreach ($messageList as $message) {
-					$errors[$field][] = array(
-						'title' => $titles[$field],
-						'message' => $message,
-					);
+					$errors[$field][] = $message;
 				}
 			}
 			$scope['error'] = $errors;
