@@ -29,7 +29,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<table class="element-list table-striped table-hover">
+		<table class="element-list table-striped table-hover table-responsive">
 			<thead>
 				<th class="first"><img src="/packages/lemon-tree/admin/img/default-sorting-inactive.gif" alt="" /></th>
 				<th ng-repeat="property in elementListView.itemPropertyList">{{property.title}}</th>
@@ -46,6 +46,7 @@
 			</tbody>
 		</table>
 	</div>
+	<div ng-if="plugin" ng-include src="plugin" class="plugin"></div>
 	<p ng-show="empty">
 		В данном разделе элементы отсутствуют.<br />
 		<span ng-show="currentElement">Вы можете <a ui-sref="base.editElement({classId: currentElement.classId})">редактировать</a> этот элемент.</span>

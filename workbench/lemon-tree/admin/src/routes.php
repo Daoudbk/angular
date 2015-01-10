@@ -144,6 +144,8 @@ Route::group(array(
 
 	Route::get('binds/{classId?}', 'LemonTree\BrowseController@getBinds');
 
+	Route::get('plugin/browse/{classId}', 'LemonTree\PluginController@getBrowsePlugin');
+
 	Route::get('favorites', 'LemonTree\FavoritesController@getList');
 
 	Route::post('favorites/{classId}', 'LemonTree\FavoritesController@postToggle');

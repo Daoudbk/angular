@@ -1,4 +1,4 @@
-browse.controller('EditController', function(
+edit.controller('EditController', function(
 	$rootScope, $scope, $http, $state, $stateParams
 ) {
 	var classId = $stateParams.classId;

@@ -47,7 +47,7 @@ body {
 	overflow-y: scroll;
 	margin: 0;
 	padding: 10px 5px 20px 15px;
-	background: url(../img/background.jpg);
+	background: url(../img/background.jpg) no-repeat fixed;
 	font-family: arial, sans-serif;
 	font-size: 14px;
 	white-space: nowrap;
@@ -188,6 +188,7 @@ span.h2 b {
 }
 
 p {
+	margin: 5px 0;
 	padding: 5px 0;
 }
 
@@ -211,6 +212,10 @@ span.h2 {
 }
 table .light {
 	background: #EEE;
+}
+
+.logo {
+	color: #000;
 }
 
 .small {
@@ -289,7 +294,7 @@ transition: all linear 0.5s;
 }
 
 .halflings,
-.glyphicon {
+.glyphicons {
 	position: relative;
 	top: 2px;
 	display: inline-block;
@@ -331,10 +336,6 @@ td .halflings {
 	color: orange;
 }
 
-ul.nav .glyphicons {
-	color: white;
-}
-
 .red .halflings {
 	color: orange;
 }
@@ -367,6 +368,7 @@ ul.nav > li.dropdown > a {
 }
 
 .controls .btn {
+	margin-bottom: 5px;
 	padding: 10px 10px;
 }
 
@@ -547,4 +549,8 @@ span.error {
 	border-radius: 10px;
 	background-color: orangered;
 	color: #fed;
+}
+
+.plugin {
+	margin: 10px 0;
 }

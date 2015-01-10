@@ -13,3 +13,12 @@
 
 Route::get('/', array('as' => 'home', 'uses' => 'HomeController@showWelcome'));
 
+Route::get('plugins/moneyStat', 'MoneyStatController@getIndex');
+
+Route::group(array(
+	'before' => 'admin.auth'
+), function() {
+
+	Route::get('plugins/moneyStat/list', 'MoneyStatController@getList');
+
+});

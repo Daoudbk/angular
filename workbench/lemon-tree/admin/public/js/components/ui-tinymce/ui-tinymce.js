@@ -18,7 +18,7 @@ uiTinymce.value('uiTinymceConfig', {
 			y = w.innerHeight|| e.clientHeight|| g.clientHeight;
 
 		tinyMCE.activeEditor.windowManager.open({
-			file : '/admin#',
+			file : '/admin#/filemanager',
 			title : 'Файловый менеджер',
 			width : x * 0.5,
 			height : y * 0.5,

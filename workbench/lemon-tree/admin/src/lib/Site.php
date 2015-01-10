@@ -85,6 +85,11 @@ class Site {
 		return $this;
 	}
 
+	public function getBrowsePlugins()
+	{
+		return $this->browsePlugins;
+	}
+
 	public function getBrowsePlugin($classId)
 	{
 		if (isset($this->browsePlugins[$classId])) {
@@ -106,15 +111,20 @@ class Site {
 
 	public function bindSearchPlugin($class, $plugin)
 	{
-		$this->searchFilters[$class] = $plugin;
+		$this->searchPlugins[$class] = $plugin;
 
 		return $this;
 	}
 
+	public function getSearchPlugins()
+	{
+		return $this->searchPlugins;
+	}
+
 	public function getSearchPlugin($class)
 	{
-		if (isset($this->searchFilters[$class])) {
-			return $this->searchFilters[$class];
+		if (isset($this->searchPlugins[$class])) {
+			return $this->searchPlugins[$class];
 		}
 
 		return null;
@@ -125,6 +135,11 @@ class Site {
 		$this->editPlugins[$classId] = $plugin;
 
 		return $this;
+	}
+
+	public function getEditPlugins()
+	{
+		return $this->editPlugins;
 	}
 
 	public function getEditPlugin($classId)
@@ -151,6 +166,11 @@ class Site {
 		$this->browseFilters[$class] = $plugin;
 
 		return $this;
+	}
+
+	public function getBrowseFilters()
+	{
+		return $this->browseFilters;
 	}
 
 	public function getBrowseFilter($class)

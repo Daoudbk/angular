@@ -54,9 +54,14 @@
 
 <script src="<?=asset('packages/lemon-tree/admin/js/components/browse/browse.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/components/browse/browse-controller.js')?>"></script>
-<script src="<?=asset('packages/lemon-tree/admin/js/components/browse/edit-controller.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/components/browse/search-controller.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/components/browse/trash-controller.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/edit/edit.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/edit/edit-controller.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/filemanager/filemanager.js')?>"></script>
+<script src="<?=asset('packages/lemon-tree/admin/js/components/filemanager/filemanager-controller.js')?>"></script>
 
 <script src="<?=asset('packages/lemon-tree/admin/js/components/navbar/navbar.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/components/navbar/navbar-controller.js')?>"></script>
@@ -81,6 +86,13 @@
 <script src="<?=asset('packages/lemon-tree/admin/js/components/form/form.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/components/form/form-interceptor.js')?>"></script>
 <script src="<?=asset('packages/lemon-tree/admin/js/components/form/submit-on-directive.js')?>"></script>
+
+<script src="<?=asset('packages/lemon-tree/admin/js/components/plugin/plugin.js')?>"></script>
+
+<?php foreach ($pluginList as $plugin) :?>
+<?php	if ( ! file_exists(public_path().'/js/plugins/'.$plugin.'.js')) continue;?>
+<script src="<?=asset('js/plugins/'.$plugin.'.js')?>"></script>
+<?php endforeach;?>
 </head>
 <body ng-app="adminApp" ui-view>
 </body>

@@ -7,7 +7,8 @@ var app = angular.module('adminApp', [
 	'ModalCtrl', 'PropertyCtrl', 'ContextMenuCtrl',
 	'AlertCtrl', 'AuthCtrl', 'FormCtrl',
 	'NavbarCtrl', 'TreeCtrl', 'FavoritesCtrl',
-	'LoginCtrl', 'BrowseCtrl', 'UsersCtrl'
+	'LoginCtrl', 'UsersCtrl',
+	'BrowseCtrl', 'EditCtrl', 'FilemanagerCtrl', 'PluginCtrl',
 ]);
 
 app.run(function(
@@ -90,13 +91,18 @@ app.config([
 		})
 		.state('base.editElement', {
 			url: '/edit/{classId:[A-Za-z\.0-9]+}',
-			templateUrl: templatePath('components/browse/edit'),
+			templateUrl: templatePath('components/edit/edit'),
 			controller: 'EditController'
 		})
 		.state('base.addElement', {
 			url: '/add/{class:[A-Za-z\0-9]+}',
-			templateUrl: templatePath('components/browse/edit'),
+			templateUrl: templatePath('components/edit/edit'),
 			controller: 'EditController'
+		})
+		.state('filemanager', {
+			url: '/filemanager',
+			templateUrl: templatePath('components/filemanager/filemanager'),
+			controller: 'FilemanagerController'
 		})
 		.state('base.search', {
 			url: '/search',

@@ -7,6 +7,7 @@ browse.controller('BrowseController', function(
 
 	$scope.currentElement = null;
 	$scope.parentElement = null;
+	$scope.plugin = null;
 	$scope.parentList = [];
 	$scope.bindItemList = [];
 	$scope.elementListViewList = [];
@@ -21,6 +22,20 @@ browse.controller('BrowseController', function(
 				$scope.currentElement = response.data.currentElement;
 				$scope.parentElement = response.data.parentElement;
 				$scope.parentList = response.data.parentList;
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+
+		$http({
+			method: 'GET',
+			url: 'api/plugin/browse/'+classId
+		}).then(
+			function(response) {
+				if (response.data.plugin) {
+					$scope.plugin = 'plugins/'+response.data.plugin;
+				}
 			},
 			function(error) {
 				console.log(error);
