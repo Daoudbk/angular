@@ -168,6 +168,8 @@ app.config([
 		$.blockUI.defaults.message = '<img src="packages/lemon-tree/admin/img/loader.gif" />';
 		$.blockUI.defaults.css.border = 'none';
 		$.blockUI.defaults.css.background = 'none';
+		$.blockUI.defaults.css.zIndex = 10001;
+		$.blockUI.defaults.overlayCSS.zIndex = 10000;
 		$.blockUI.defaults.overlayCSS.opacity = 0.2;
 		$.blockUI.defaults.fadeIn = 50;
 

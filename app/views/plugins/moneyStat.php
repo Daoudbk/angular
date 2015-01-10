@@ -10,7 +10,7 @@
 				<input ng-model="filter.priceTo" type="text" class="form-control number" placeholder="Цена до">
 			</div>
 			<div class="form-group">
-				<button class="btn btn-default" type="submit">Найти</button>
+				<button class="btn btn-primary" type="submit">Найти</button>
 			</div>
 		</form>
 	</div>
