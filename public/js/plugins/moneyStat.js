@@ -2,6 +2,8 @@ plugin.controller('MoneyStatController', function(
 	$rootScope, $scope, $http, $state, $stateParams
 ) {
 	var getList = function() {
+		$('button').blur();
+
 		$http({
 			method: 'GET',
 			url: 'plugins/moneyStat/list',

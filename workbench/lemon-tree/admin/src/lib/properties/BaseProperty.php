@@ -17,6 +17,8 @@ abstract class BaseProperty {
 	protected $element = null;
 	protected $value = null;
 
+	protected $trashed = false;
+
 	protected $rules = array();
 	protected $messages = array();
 
@@ -161,6 +163,7 @@ abstract class BaseProperty {
 		$this->element = $element;
 
 		$this->value = $element->{$this->getName()};
+		$this->trashed = $element->trashed();
 
 		return $this;
 	}
@@ -173,6 +176,11 @@ abstract class BaseProperty {
 	public function getValue()
 	{
 		return $this->value;
+	}
+
+	public function isTrashed()
+	{
+		return $this->trashed;
 	}
 
 	public function searchQuery($query)
@@ -224,6 +232,7 @@ abstract class BaseProperty {
 			'value' => $this->getValue(),
 			'isMainProperty' => $this->isMainProperty(),
 			'classId' => $classId,
+			'trashed' => $this->isTrashed(),
 		);
 
 		return $scope;

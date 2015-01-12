@@ -1,19 +1,67 @@
 browse.controller('TrashController', function(
-	$rootScope, $scope, $http
+	$rootScope, $scope, $http, $stateParams
 ) {
+	var className = $stateParams.class;
+
+	var getItem = function(className) {
+		$http({
+			method: 'GET',
+			url: 'api/trash/item/'+className
+		}).then(
+			function(response) {
+				$scope.currentItem = response.data.item;
+				getItems();
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	}
+
+	var getItems = function() {
+		$http({
+			method: 'GET',
+			url: 'api/trash/items'
+		}).then(
+			function(response) {
+				$scope.itemList = response.data.itemList;
+				$scope.empty = $scope.itemList.length ? false : true;
+				if (className) {
+					getElementListView();
+				}
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
+	var getElementListView = function() {
+		$http({
+			method: 'GET',
+			url: (className ? 'api/trash/'+className : 'api/trash')
+		}).then(
+			function(response) {
+				if (response.data.elementListView) {
+					$scope.elementListView = response.data.elementListView;
+				}
+			},
+			function(error) {
+				console.log(error);
+			}
+		);
+	};
+
 	$rootScope.activeIcon = 'trash';
 
-	$scope.categoryList = [];
+	$scope.itemList = [];
+	$scope.currentItem = null;
+	$scope.elementListView = null;
+	$scope.empty = false;
 
-	$http({
-		method: 'GET',
-		url: 'api/browse'
-	}).then(
-		function(response) {
-			$scope.categoryList = response.data.categoryList;
-		},
-		function(error) {
-			console.log(error);
-		}
-	);
+	if (className) {
+		getItem(className);
+	} else {
+		getItems();
+	}
 });

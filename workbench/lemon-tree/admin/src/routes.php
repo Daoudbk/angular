@@ -142,6 +142,12 @@ Route::group(array(
 
 	Route::get('browse/{classId?}', 'LemonTree\BrowseController@getIndex');
 
+	Route::get('trash/items', 'LemonTree\BrowseController@getTrashItems');
+
+	Route::get('trash/item/{class}', 'LemonTree\BrowseController@getTrashItem');
+
+	Route::get('trash/{class}', 'LemonTree\BrowseController@getTrash');
+
 	Route::get('binds/{classId?}', 'LemonTree\BrowseController@getBinds');
 
 	Route::get('plugin/browse/{classId}', 'LemonTree\PluginController@getBrowsePlugin');

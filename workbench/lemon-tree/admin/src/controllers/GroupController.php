@@ -572,6 +572,10 @@ class GroupController extends \BaseController {
 
 		$groupList = Group::orderBy('name', 'asc')->get();
 
+		foreach ($groupList as $group) {
+			$group->admin = $group->hasAccess('admin');
+		}
+
 		$scope['groupList'] = $groupList;
 
 		return \Response::json($scope);

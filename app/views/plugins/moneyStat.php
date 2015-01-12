@@ -3,7 +3,7 @@
 	<div class="well">
 		<form role="form" class="form-inline" ng-submit="search()">
 			<div class="form-group">
-				<input ng-model="filter.name" type="text" class="form-control" placeholder="Название">
+				<input ng-model="filter.name" type="text" name="name" class="form-control" placeholder="Название">
 			</div>
 			<div class="form-group">
 				<input ng-model="filter.priceFrom" type="text" class="form-control number" placeholder="Цена от">

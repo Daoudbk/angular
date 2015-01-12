@@ -92,10 +92,21 @@ app.config([
 		.state('base.editElement', {
 			url: '/edit/{classId:[A-Za-z\.0-9]+}',
 			templateUrl: templatePath('components/edit/edit'),
-			controller: 'EditController'
+			controller: 'EditController',
+			data: {
+				trashed: false
+			}
+		})
+		.state('base.trashedElement', {
+			url: '/trashed/{classId:[A-Za-z\.0-9]+}',
+			templateUrl: templatePath('components/edit/edit'),
+			controller: 'EditController',
+			data: {
+				trashed: true
+			}
 		})
 		.state('base.addElement', {
-			url: '/add/{class:[A-Za-z\0-9]+}',
+			url: '/add/{class:[A-Za-z0-9]+}',
 			templateUrl: templatePath('components/edit/edit'),
 			controller: 'EditController'
 		})
@@ -111,6 +122,11 @@ app.config([
 		})
 		.state('base.trash', {
 			url: '/trash',
+			templateUrl: templatePath('components/browse/trash'),
+			controller: 'TrashController'
+		})
+		.state('base.trashItem', {
+			url: '/trash/{class:[A-Za-z0-9]+}',
 			templateUrl: templatePath('components/browse/trash'),
 			controller: 'TrashController'
 		})

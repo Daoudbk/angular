@@ -507,6 +507,10 @@ ul.pagination > li > a {
 	margin-bottom: 5px;
 }
 
+ul.nav-pills > li > a {
+	margin-bottom: 5px;
+}
+
 .dropdown-menu > li > a:hover {
 	cursor: pointer;
 	cursor: hand;
@@ -554,3 +558,22 @@ span.error {
 .plugin {
 	margin: 10px 0;
 }
+
+.trash.pager {
+	margin: 2px 0 12px 0;
+}
+
+ul.pager > li a {
+	padding: 5px 10px 6px 10px;
+}
+
+ul.pager > li.active a {
+	color: #ffffff;
+	background-color: #337ab7;
+}
+
+ul.pager > li.active .badge {
+	background-color: #ffffff;
+	color: #337ab7;
+}
+

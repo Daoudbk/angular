@@ -3,7 +3,9 @@ edit.controller('EditController', function(
 ) {
 	var classId = $stateParams.classId;
 
-	$rootScope.activeIcon = 'edit';
+	$rootScope.activeIcon = $state.current.data.trashed ? 'trash' : 'browse';
+
+	$scope.trashed = $state.current.data.trashed;
 
 	$scope.currentElement = null;
 	$scope.parentElement = null;
@@ -21,6 +23,20 @@ edit.controller('EditController', function(
 			$scope.parentList = response.data.parentList;
 			$scope.currentItem = response.data.currentItem;
 			$scope.propertyList = response.data.propertyList;
+
+			if (
+				$scope.currentElement.trashed
+				&& $state.current.name == 'base.editElement'
+			) {
+				$state.go('base.trashedElement', {classId: classId});
+			}
+
+			if (
+				! $scope.currentElement.trashed
+				&& $state.current.name == 'base.trashedElement'
+			) {
+				$state.go('base.editElement', {classId: classId});
+			}
 		},
 		function(error) {
 			console.log(error);

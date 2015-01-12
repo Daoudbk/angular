@@ -32,6 +32,7 @@ class EditController extends \BaseController {
 
 		$currentElement->classId = $currentElement->getClassId();
 		$currentElement->mainProperty = $currentElement->$mainProperty;
+		$currentElement->trashed = $currentElement->trashed();
 
 		$parentElement = $currentElement->getParent();
 
