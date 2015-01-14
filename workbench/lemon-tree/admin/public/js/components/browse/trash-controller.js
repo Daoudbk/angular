@@ -27,7 +27,7 @@ browse.controller('TrashController', function(
 				$scope.itemList = response.data.itemList;
 				$scope.empty = $scope.itemList.length ? false : true;
 				if (className) {
-					getElementListView();
+					getElementListView(className);
 				}
 			},
 			function(error) {
@@ -36,10 +36,10 @@ browse.controller('TrashController', function(
 		);
 	};
 
-	var getElementListView = function() {
+	var getElementListView = function(className) {
 		$http({
 			method: 'GET',
-			url: (className ? 'api/trash/'+className : 'api/trash')
+			url: 'api/trash/'+className
 		}).then(
 			function(response) {
 				if (response.data.elementListView) {

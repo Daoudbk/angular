@@ -1,0 +1,7 @@
+<div class="search-number">
+	<span ng-click="toggle(view.name)" class="dashed hand">{{view.title}}</span>:
+	<div name="{{view.name}}" style="display: {{view.value ? 'block' : 'none'}}">
+		от <input ng-model="view.from" type="text" class="form-control">
+		до <input ng-model="view.to" type="text" class="form-control">
+	</div>
+</div>

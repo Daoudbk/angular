@@ -7,22 +7,15 @@ class TextfieldProperty extends BaseProperty {
 		return new self($name);
 	}
 
-	public function getBrowseEditView()
+	public function getSearchView()
 	{
-		$scope = array(
-			'name' => $this->getName(),
-			'title' => $this->getTitle(),
-			'value' => $this->getValue(),
-			'element' => $this->getElement(),
-			'readonly' => $this->getReadonly(),
-		);
+		$scope = parent::getSearchView();
 
-		try {
-			$view = $this->getClassName().'.browseEdit';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
+		$relatedClass = $this->getItemName();
 
-		return null;
+		$scope['relatedClass'] = $relatedClass;
+
+		return $scope;
 	}
 
 }

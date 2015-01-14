@@ -56,6 +56,11 @@ abstract class BaseProperty {
 		return $this->itemClass;
 	}
 
+	public function getItemName()
+	{
+		return $this->item->getName();
+	}
+
 	public function setName($name)
 	{
 		$this->name = $name;
@@ -250,25 +255,25 @@ abstract class BaseProperty {
 		return $scope;
 	}
 
-	public function getBrowseEditView()
+	public function getEditListView()
 	{
-		return $this->getElementListView();
+		return $this->getListView();
 	}
 
-	public function getElementSearchView()
+	public function getSearchView()
 	{
+		$value = \Input::get($this->getName());
+
+		if ( ! mb_strlen($value)) $value = null;
+
 		$scope = array(
 			'name' => $this->getName(),
 			'title' => $this->getTitle(),
-			'value' => \Input::get($this->getName()),
+			'value' => $value,
+			'isMainProperty' => $this->isMainProperty(),
 		);
 
-		try {
-			$view = $this->getClassName().'.elementSearch';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
 
 	public function setRules($rules)

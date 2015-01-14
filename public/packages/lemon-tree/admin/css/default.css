@@ -373,7 +373,7 @@ ul.nav > li.dropdown > a {
 }
 
 table.element-list-header {
-	margin: 0;
+	margin: 0 0 5px 0;
 	padding: 0;
 }
 
@@ -385,7 +385,7 @@ table.element-list-header tr {
 
 table.element-list-header td {
 	margin: 0;
-	padding: 0;
+	padding: 0 0 3px 0;
 	border-collapse: collapse;
 }
 
@@ -396,6 +396,13 @@ table.element-list-header td {
 
 .order-link img {
 	vertical-align: middle;
+}
+
+.order-link .active {
+	padding: 2px 5px 3px 5px;
+	border-radius: 3px;
+	background: #999;
+	color: #FFF;
 }
 
 .order-link .active {
@@ -563,7 +570,12 @@ span.error {
 	margin: 2px 0 12px 0;
 }
 
+.search.pager {
+	margin: 10px 0 15px 0;
+}
+
 ul.pager > li a {
+	margin-bottom: 5px;
 	padding: 5px 10px 6px 10px;
 }
 
@@ -577,3 +589,178 @@ ul.pager > li.active .badge {
 	color: #337ab7;
 }
 
+.search-properties {
+	padding-top: 20px;
+}
+
+div.item-search {
+	float: left;
+	margin: 5px 10px 5px 0;
+	padding: 5px 10px;
+	background: #FFF;
+	border: 1px solid #CCC;
+	border-radius: 4px;
+}
+
+div.item-search-active {
+	float: left;
+	margin: 5px 10px 5px 0;
+	padding: 5px 10px;
+	background: #666;
+	border: 1px solid #999;
+	color: #fff;
+	border-radius: 4px;
+}
+
+div.item-search span {
+	border-bottom: 1px dashed;
+	cursor: pointer;
+	cursor: hand;
+}
+
+div.prop-search {
+	float: left;
+	overflow: hidden;
+	margin: 5px 10px 5px 0;
+	padding: 5px 10px;
+	background: #FFF;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+	white-space: nowrap;
+	font-size: 13px;
+}
+
+div.prop-search input[type="text"], input[type="radio"], select, label {
+	margin: 7px 5px 3px 0;
+}
+
+div.prop-search label {
+	padding: 4px 0 5px 0;
+	font-weight: normal;
+}
+
+.search-main span {
+	font-weight: bold;
+	color: #000;
+}
+
+.search-main input {
+	width: 250px;
+}
+
+.search-textfield span {
+	color: #000;
+}
+
+.search-textfield input {
+	width: 150px;
+}
+
+.search-textarea span {
+	color: teal;
+}
+
+.search-textarea input {
+	width: 150px;
+}
+
+.search-number span {
+	color: tomato;
+}
+
+.search-number input {
+	display: inline;
+	width: 75px;
+	margin-left: 5px;
+}
+
+.search-one span {
+	color: navy;
+}
+
+.search-one input {
+	width: 250px;
+}
+
+.search-link span {
+	color: navy;
+}
+
+.search-link input {
+	width: 150px;
+}
+
+.search-file span {
+	color: peru;
+}
+
+.search-file input {
+	width: 150px;
+}
+
+.search-checkbox span {
+	color: dodgerblue;
+}
+
+.search-checkbox input {
+	margin-right: 0;
+}
+
+.search-date span {
+	color: firebrick;
+}
+
+.search-date input {
+	display: inline;
+	width: 100px;
+	margin-left: 5px;
+}
+
+.trash-items {
+	margin-bottom: 20px;
+}
+
+div.item-trash {
+	float: left;
+	margin: 5px 10px 5px 0;
+	padding: 5px 10px;
+	background: #FFF;
+	border: 1px solid #CCC;
+	border-radius: 4px;
+}
+
+div.item-trash-active {
+	float: left;
+	margin: 5px 10px 5px 0;
+	padding: 5px 10px;
+	background: #666;
+	border: 1px solid #999;
+	color: #fff;
+	border-radius: 4px;
+}
+
+div.item-trash-active a {
+	color: #fff;
+}
+
+div.item-trash span {
+	border-bottom: 1px dashed;
+	cursor: pointer;
+	cursor: hand;
+}
+
+div.item-trash .badge {
+	margin-left: 5px;
+	border: none;
+	border-radius: 10px;
+	background: #666;
+	color: #fff;
+}
+
+div.item-trash-active .badge {
+	margin-left: 5px;
+	border: none;
+	border-radius: 10px;
+	background: #fff;
+	color: #000;
+}

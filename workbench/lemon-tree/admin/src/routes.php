@@ -142,9 +142,15 @@ Route::group(array(
 
 	Route::get('browse/{classId?}', 'LemonTree\BrowseController@getIndex');
 
-	Route::get('trash/items', 'LemonTree\BrowseController@getTrashItems');
+	Route::get('search/items', 'LemonTree\SearchController@getItems');
 
-	Route::get('trash/item/{class}', 'LemonTree\BrowseController@getTrashItem');
+	Route::get('search/item/{class}', 'LemonTree\SearchController@getItem');
+
+	Route::get('search/{class}', 'LemonTree\BrowseController@getSearch');
+
+	Route::get('trash/items', 'LemonTree\TrashController@getItems');
+
+	Route::get('trash/item/{class}', 'LemonTree\TrashController@getItem');
 
 	Route::get('trash/{class}', 'LemonTree\BrowseController@getTrash');
 

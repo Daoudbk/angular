@@ -5,12 +5,21 @@
 		<li ng-if="currentItem" class="active">{{currentItem.title}}</li>
 	</ul>
 
-	<div ng-show="itemList.length" class="clearfix">
-		<ul class="trash pager pull-left">
-			<li ng-repeat="item in itemList" ng-class="currentItem.name == item.name ? 'active' : ''">
-				<a ui-sref="base.trashItem({class: item.name})">{{item.title}} <span class="badge">{{item.total}}</span></a>
-			</li>
-		</ul>
+	<div ng-show="itemList.length" class="trash-items clearfix">
+		<table class="element-list-header">
+			<tr>
+				<td>
+					<span class="h2">Класс элемента</span>
+				</td>
+			</tr>
+		</table>
+		<div id="items-container">
+			<div ng-repeat="item in itemList" ng-class="currentItem.name == item.name ? 'item-trash-active' : 'item-trash'">
+				<a ng-if="currentItem.name != item.name" ui-sref="base.trashItem({class: item.name})">{{item.title}}</a>
+				<span ng-if="currentItem.name == item.name">{{item.title}}</span>
+				<span class="badge">{{item.total}}</span>
+			</div>
+		</div>
 	</div>
 
 	<div ng-show="elementListView">

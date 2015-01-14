@@ -144,22 +144,6 @@ class OneToOneProperty extends BaseProperty {
 			? true : false;
 	}
 
-	public function getElementListView()
-	{
-		$site = \App::make('site');
-
-		$scope = array(
-			'value' => $this->getValue(),
-		);
-
-		try {
-			$view = $this->getClassName().'.elementList';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
-	}
-
 	public function getEditView()
 	{
 		$relatedClass = $this->getRelatedClass();
@@ -208,41 +192,15 @@ class OneToOneProperty extends BaseProperty {
 		return null;
 	}
 
-	public function getElementSearchView()
+	public function getSearchView()
 	{
-		$site = \App::make('site');
+		$scope = parent::getSearchView();
 
 		$relatedClass = $this->getRelatedClass();
-		$relatedItem = $site->getItemByName($relatedClass);
-		$mainProperty = $relatedItem->getMainProperty();
-		$url = \URL::route('admin.hint', $relatedClass);
 
-		$id = \Input::get($this->getName());
+		$scope['relatedClass'] = $relatedClass;
 
-		try {
-			$value = $relatedClass::find($id);
-			$valueName = $value->$mainProperty;
-		} catch (\Exception $e) {
-			$value = null;
-			$valueName = null;
-		}
-
-		$scope = array(
-			'name' => $this->getName(),
-			'title' => $this->getTitle(),
-			'value' => $value,
-			'valueName' => $valueName,
-			'mainProperty' => $mainProperty,
-			'relatedClass' => $relatedClass,
-			'url' => $url,
-		);
-
-		try {
-			$view = $this->getClassName().'.elementSearch';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
 
 }

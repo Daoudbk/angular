@@ -120,6 +120,11 @@ app.config([
 			templateUrl: templatePath('components/browse/search'),
 			controller: 'SearchController'
 		})
+		.state('base.searchItem', {
+			url: '/search/{class:[A-Za-z0-9]+}',
+			templateUrl: templatePath('components/browse/search'),
+			controller: 'SearchController'
+		})
 		.state('base.trash', {
 			url: '/trash',
 			templateUrl: templatePath('components/browse/trash'),
