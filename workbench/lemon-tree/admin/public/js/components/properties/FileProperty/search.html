@@ -1,5 +1,5 @@
 <div class="search-file">
-	<span ng-click="toggle(view.name)" class="dashed hand">{{view.title}}</span>:
+	<span class="glyphicons glyphicons-download-alt"></span> <span ng-click="toggle(view.name)" class="dashed hand">{{view.title}}</span>:
 	<div name="{{view.name}}" style="display: {{view.value ? 'block' : 'none'}}">
 		<input ng-model="view.value" type="text" class="form-control">
 	</div>

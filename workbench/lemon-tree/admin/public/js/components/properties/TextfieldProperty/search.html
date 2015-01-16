@@ -5,7 +5,7 @@
 	</div>
 </div>
 <div ng-if=" ! view.isMainProperty" class="search-textfield">
-	<span ng-click="toggle(view.name)" class="dashed hand">{{view.title}}</span>:
+	<span class="glyphicons glyphicons-pen"></span> <span ng-click="toggle(view.name)" class="dashed hand">{{view.title}}</span>:
 	<div name="{{view.name}}" style="display: {{view.value ? 'block' : 'none'}}">
 		<input ng-model="view.value" type="text" class="form-control">
 	</div>
