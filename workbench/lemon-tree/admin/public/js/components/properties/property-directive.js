@@ -32,11 +32,13 @@ property.directive('property', function ($http, Helper) {
 					container.hide();
 					container.children('input').attr('disabled', true);
 					container.children('label').children('input').attr('disabled', true);
+					scope.view.open = false;
 				} else {
 					container.children('input').removeAttr('disabled');
 					container.children('label').children('input').removeAttr('disabled');
 					container.show();
 					container.children('input:text:first:not([bs-datepicker]):not([bs-typeahead])').focus();
+					scope.view.open = true;
 				}
 			};
 		}

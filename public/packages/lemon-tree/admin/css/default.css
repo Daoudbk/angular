@@ -648,7 +648,7 @@ div.prop-search label {
 	width: 250px;
 }
 
-.search-textfield span {
+.search-textfield span.glyphicons {
 	color: #000;
 }
 
@@ -656,7 +656,7 @@ div.prop-search label {
 	width: 150px;
 }
 
-.search-textarea span {
+.search-textarea span.glyphicons {
 	color: teal;
 }
 
@@ -664,7 +664,7 @@ div.prop-search label {
 	width: 150px;
 }
 
-.search-number span {
+.search-number span.glyphicons {
 	color: tomato;
 }
 
@@ -674,23 +674,23 @@ div.prop-search label {
 	margin-left: 5px;
 }
 
-.search-one span {
-	color: navy;
+.search-one span.glyphicons {
+	color: indigo;
 }
 
 .search-one input {
 	width: 250px;
 }
 
-.search-link span {
-	color: navy;
+.search-link span.glyphicons {
+	color: indigo;
 }
 
 .search-link input {
 	width: 150px;
 }
 
-.search-file span {
+.search-file span.glyphicons {
 	color: peru;
 }
 
@@ -698,7 +698,7 @@ div.prop-search label {
 	width: 150px;
 }
 
-.search-checkbox span {
+.search-checkbox span.glyphicons {
 	color: dodgerblue;
 }
 
@@ -706,7 +706,7 @@ div.prop-search label {
 	margin-right: 0;
 }
 
-.search-date span {
+.search-date span.glyphicons {
 	color: firebrick;
 }
 

@@ -47,39 +47,29 @@ class FloatProperty extends BaseProperty {
 			? true : false;
 	}
 
-	public function getBrowseEditView()
+	public function getSearchView()
 	{
+		$name = $this->getName();
+
+		$from = \Input::get($name.'_from');
+		$to = \Input::get($name.'_to');
+
+		if ( ! mb_strlen($from)) $from = null;
+		if ( ! mb_strlen($to)) $to = null;
+
+		$value = null;
+
+		if ($from) $value['from'] = $from;
+		if ($to) $value['to'] = $to;
+
 		$scope = array(
 			'name' => $this->getName(),
 			'title' => $this->getTitle(),
-			'value' => $this->getValue(),
-			'element' => $this->getElement(),
-			'readonly' => $this->getReadonly(),
+			'value' => $value,
+			'open' => $value !== null,
 		);
 
-		try {
-			$view = $this->getClassName().'.browseEdit';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
-	}
-
-	public function getElementSearchView()
-	{
-		$scope = array(
-			'name' => $this->getName(),
-			'title' => $this->getTitle(),
-			'from' => \Input::get($this->getName().'_from'),
-			'to' => \Input::get($this->getName().'_to'),
-		);
-
-		try {
-			$view = $this->getClassName().'.elementSearch';
-			return \View::make('admin::properties.'.$view, $scope);
-		} catch (\Exception $e) {}
-
-		return null;
+		return $scope;
 	}
 
 }

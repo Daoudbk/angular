@@ -39,7 +39,7 @@ class BrowseController extends \BaseController {
 		foreach ($itemList as $itemName => $item) {
 
 			$elementListView = $this->getElementListView(
-				$item, $currentElement, false
+				$item, $currentElement, false, false
 			);
 
 			if (sizeof($elementListView)) {
@@ -65,12 +65,38 @@ class BrowseController extends \BaseController {
 
 		if ($item) {
 			$elementListView = $this->getElementListView(
-				$item, null, true
+				$item, null, false, true
 			);
 
 			if ($elementListView) {
 				$scope['elementListView'] = $elementListView;
 			}
+		}
+
+		return \Response::json($scope);
+	}
+
+	public function getSearch($class)
+	{
+		$scope = array();
+
+		$loggedUser = LoggedUser::getUser();
+
+		$site = \App::make('site');
+
+		$item = $site->getItemByName($class);
+
+		if ( ! $item) {
+			$scope['state'] = 'error_trash_item_not_found';
+			return \Response::json($scope);
+		}
+
+		$elementListView = $this->getElementListView(
+			$item, null, true, false
+		);
+
+		if ($elementListView) {
+			$scope['elementListView'] = $elementListView;
 		}
 
 		return \Response::json($scope);
@@ -148,6 +174,7 @@ class BrowseController extends \BaseController {
 	protected function getElementListView(
 		Item $item,
 		$currentElement = null,
+		$search = false,
 		$trashed = false
 	)
 	{
@@ -167,7 +194,7 @@ class BrowseController extends \BaseController {
 
 		$propertyList = $item->getPropertyList();
 
-		if ( ! $currentElement && ! $item->getRoot() && ! $trashed) {
+		if ( ! $currentElement && ! $item->getRoot() && ! $trashed && ! $search) {
 			return $scope;
 		}
 
@@ -248,14 +275,45 @@ class BrowseController extends \BaseController {
 
 		}
 
-		if ($trashed) {
+		if ($search) {
+
+			$elementListCriteria = $item->getClass()->where(
+				function($query) use ($item, $propertyList, $loggedUser) {
+					$search = $loggedUser->getParameter('search');
+
+					$query->where('id', '>', 0);
+
+					foreach ($propertyList as $propertyName => $property) {
+						$query = $property->searchQuery($query);
+						if ($property->searching()) {
+							$itemName = $item->getName();
+							$propertyName = $property->getName();
+							$search['sortPropertyDate'][$itemName][$propertyName]
+								= Carbon::now()->toDateTimeString();
+							if (isset($search['sortPropertyRate'][$itemName][$propertyName])) {
+								$search['sortPropertyRate'][$itemName][$propertyName]++;
+							} else {
+								$search['sortPropertyRate'][$itemName][$propertyName] = 1;
+							}
+						}
+					}
+
+					$loggedUser->setParameter('search', $search);
+				}
+			);
+
+		} elseif ($trashed) {
+
 			$elementListCriteria = $item->getClass()->onlyTrashed();
+
 		} else {
+
 			$elementListCriteria = $item->getClass()->where(
 				function($query) use ($propertyList, $currentElement) {
 					if ($currentElement) {
 						$query->orWhere('id', null);
 					}
+
 					foreach ($propertyList as $propertyName => $property) {
 						if (
 							$currentElement
@@ -276,6 +334,7 @@ class BrowseController extends \BaseController {
 					}
 				}
 			);
+
 		}
 
 		if ( ! $loggedUser->isSuperUser()) {

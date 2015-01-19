@@ -1,12 +1,37 @@
 browse.controller('SearchController', function(
-	$rootScope, $scope, $http, $stateParams
+	$rootScope, $scope, $http, $state, $stateParams
 ) {
-	var className = $stateParams.class;
+	var encodeOptions = function(options) {
+		var params = [];
 
-	var getElementListView = function(className) {
+		for (var name in options) {
+			var value = encodeURIComponent(options[name]);
+			params[params.length] = name+':'+value;
+		}
+
+		return params.join(';');
+	};
+
+	var decodeOptions = function(encoded) {
+		var options = [];
+
+		var params = encoded ? encoded.split(';') : [];
+
+		for (var i in params) {
+			var param = params[i].split(':');
+			var name = param[0];
+			var value = decodeURIComponent(param[1]);
+			options[name] = value;
+		}
+
+		return options;
+	};
+
+	var getElementListView = function(className, options) {
 		$http({
 			method: 'GET',
-			url: 'api/search/'+className
+			url: 'api/search/'+className,
+			params: options
 		}).then(
 			function(response) {
 				if (response.data.elementListView) {
@@ -18,6 +43,9 @@ browse.controller('SearchController', function(
 			}
 		);
 	};
+
+	var className = $stateParams.class;
+	var options = decodeOptions($stateParams.options);
 
 	$rootScope.activeIcon = 'search';
 
@@ -39,7 +67,9 @@ browse.controller('SearchController', function(
 				function(response) {
 					$scope.sortItem = response.data.sortItem;
 					$scope.itemList = response.data.itemList;
-					$('#items-container').slideDown('fast');
+					setTimeout(function() {
+						$('#items-container').slideDown('fast');
+					});
 				},
 				function(error) {
 					console.log(error);
@@ -48,17 +78,20 @@ browse.controller('SearchController', function(
 		});
 	};
 
-	$scope.selectItem = function(item) {
+	$scope.selectItem = function(className, options) {
 		$('#item-container').slideUp('fast', function() {
 			$http({
 				method: 'GET',
-				url: 'api/search/item/'+item.name
+				url: 'api/search/item/'+className,
+				params: options
 			}).then(
 				function(response) {
 					$scope.currentItem = response.data.item;
 					$scope.sortProperty = response.data.sortProperty;
 					$scope.propertyList = response.data.propertyList;
-					$('#item-container').slideDown('fast');
+					setTimeout(function() {
+						$('#item-container').slideDown('fast');
+					});
 				},
 				function(error) {
 					console.log(error);
@@ -79,7 +112,9 @@ browse.controller('SearchController', function(
 				function(response) {
 					$scope.sortProperty = response.data.sortProperty;
 					$scope.propertyList = response.data.propertyList;
-					$('#properties-container').slideDown('fast');
+					setTimeout(function() {
+						$('#properties-container').slideDown('fast');
+					});
 				},
 				function(error) {
 					console.log(error);
@@ -89,7 +124,34 @@ browse.controller('SearchController', function(
 	};
 
 	$scope.search = function() {
-		console.log($scope);
+		var propertyList = $scope.propertyList;
+
+		var options = {
+			action: 'search',
+		};
+
+		for (var i in propertyList) {
+			var name = propertyList[i].searchView.name;
+			var value = propertyList[i].searchView.value;
+			var open = propertyList[i].searchView.open;
+
+			if (name && value && open) {
+				if (typeof value === 'object') {
+					for (var i in value) {
+						options[name+'_'+i] = value[i];
+					}
+				} else {
+					options[name] = value;
+				}
+			}
+		}
+
+		options = encodeOptions(options);
+
+		$state.go('base.searchItem', {
+			class: $scope.currentItem.name,
+			options: options
+		});
 	};
 
 	$http({
@@ -100,12 +162,18 @@ browse.controller('SearchController', function(
 			$scope.sortItem = response.data.sortItem;
 			$scope.itemList = response.data.itemList;
 			$scope.empty = $scope.itemList.length ? false : true;
-			if (response.data.currentItem) {
-				$scope.selectItem(response.data.currentItem);
+			if (className) {
+				$scope.selectItem(className, options);
+			} else if (response.data.currentItem) {
+				$scope.selectItem(response.data.currentItem.name, options);
 			}
 		},
 		function(error) {
 			console.log(error);
 		}
 	);
+
+	if (className && options) {
+		getElementListView(className, options);
+	}
 });

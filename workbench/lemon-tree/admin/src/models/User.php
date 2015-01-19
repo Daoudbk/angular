@@ -66,15 +66,19 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User {
 
 	public function setParameter($name, $value)
 	{
-		$unserializedParameters = $this->getUnserializedParameters();
+		try {
 
-		$unserializedParameters[$name] = $value;
+			$unserializedParameters = $this->getUnserializedParameters();
 
-		$parameters = serialize($unserializedParameters);
+			$unserializedParameters[$name] = $value;
 
-		$this->parameters = $parameters;
+			$parameters = serialize($unserializedParameters);
 
-		$this->save();
+			$this->parameters = $parameters;
+
+			$this->save();
+			
+		} catch (\Exception $e) {}
 
 		return $this;
 	}

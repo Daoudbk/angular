@@ -19,6 +19,7 @@ app.run(function(
 		event, toState, toParams, fromState, fromParams
 	){
 		$rootScope.currentState = toState;
+		$rootScope.locationSearch = null;
 
 		if (AuthToken.isAuthenticated()) {
 			Login.user(
@@ -121,7 +122,7 @@ app.config([
 			controller: 'SearchController'
 		})
 		.state('base.searchItem', {
-			url: '/search/{class:[A-Za-z0-9]+}',
+			url: '/search/{class:[A-Za-z0-9]+}?options',
 			templateUrl: templatePath('components/browse/search'),
 			controller: 'SearchController'
 		})

@@ -317,4 +317,29 @@ class SearchController extends \BaseController {
 		return \Response::json($scope);
 	}
 
+	public function getList()
+	{
+		$scope = array();
+
+		$loggedUser = LoggedUser::getUser();
+
+		$site = \App::make('site');
+
+		$class = \Input::get('class');
+
+		$item = $site->getItemByName($class);
+
+		if ( ! $item) {
+			$scope['state'] = 'error_trash_item_not_found';
+			return \Response::json($scope);
+		}
+
+		$scope['item'] =  [
+			'name' => $item->getName(),
+			'title' => $item->getTitle(),
+		];
+
+		return \Response::json($scope);
+	}
+
 }

@@ -271,6 +271,7 @@ abstract class BaseProperty {
 			'title' => $this->getTitle(),
 			'value' => $value,
 			'isMainProperty' => $this->isMainProperty(),
+			'open' => $value !== null,
 		);
 
 		return $scope;
