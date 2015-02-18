@@ -3,7 +3,7 @@
 		<li ng-if=" ! currentElement" class="active">Корень сайта</li>
 		<li ng-if="currentElement"><a ui-sref="base.browse">Корень сайта</a></li>
 		<li ng-if="parentList.length" ng-repeat="parent in parentList"><a ui-sref="base.browseElement({classId: parent.classId})">{{parent.mainProperty}}</a></li>
-		<li ng-if="currentElement" class="active">{{currentElement.name}}</li>
+		<li ng-if="currentElement" class="active">{{currentElement.mainProperty}}</li>
 	</ul>
 	<p class="controls">
 		<button ng-click="up()" type="button" class="btn btn-default" ng-disabled=" ! currentElement"><span class="halflings halflings-triangle-top"></span> Наверх</button>

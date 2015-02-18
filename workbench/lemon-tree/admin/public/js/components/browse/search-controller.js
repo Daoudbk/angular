@@ -36,6 +36,12 @@ browse.controller('SearchController', function(
 			function(response) {
 				if (response.data.elementListView) {
 					$scope.elementListView = response.data.elementListView;
+					$scope.empty =
+						$scope.elementListView.elementList
+						&& $scope.elementListView.elementList.length
+						? false : true;
+				} else {
+					$scope.empty = true;
 				}
 			},
 			function(error) {
@@ -79,7 +85,7 @@ browse.controller('SearchController', function(
 	};
 
 	$scope.selectItem = function(className, options) {
-		$('#item-container').slideUp('fast', function() {
+		$('#item-container').fadeOut('fast', function() {
 			$http({
 				method: 'GET',
 				url: 'api/search/item/'+className,
@@ -90,7 +96,7 @@ browse.controller('SearchController', function(
 					$scope.sortProperty = response.data.sortProperty;
 					$scope.propertyList = response.data.propertyList;
 					setTimeout(function() {
-						$('#item-container').slideDown('fast');
+						$('#item-container').fadeIn('fast');
 					});
 				},
 				function(error) {
@@ -103,7 +109,7 @@ browse.controller('SearchController', function(
 	$scope.sortProperties = function(sort) {
 		if ( ! $scope.currentItem) return false;
 
-		$('#properties-container').slideUp('fast', function() {
+		$('#properties-container').fadeOut('fast', function() {
 			$http({
 				method: 'GET',
 				url: 'api/search/item/'+$scope.currentItem.name,
@@ -113,7 +119,7 @@ browse.controller('SearchController', function(
 					$scope.sortProperty = response.data.sortProperty;
 					$scope.propertyList = response.data.propertyList;
 					setTimeout(function() {
-						$('#properties-container').slideDown('fast');
+						$('#properties-container').fadeIn('fast');
 					});
 				},
 				function(error) {
